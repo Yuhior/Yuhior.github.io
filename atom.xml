@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-08T09:34:06.681Z</updated>
+  <updated>2020-07-15T06:42:13.871Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>throttle</title>
+    <link href="http://yoursite.com/2020/07/15/throttle/"/>
+    <id>http://yoursite.com/2020/07/15/throttle/</id>
+    <published>2020-07-15T03:41:31.000Z</published>
+    <updated>2020-07-15T06:42:13.871Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>最近身体疲惫，每天感觉脑子跟不上，并且很容易犯困，还好有人一直给充电，本来不太精神但是瞬间就充满能量。经过一番思想斗争之后，终于决定昨天鸽了一下，哇，真的好爽，今天早上来了还被嘲讽提前过上了公园大爷的生活，哈哈哈，不过休班一时爽，一直休班一直爽啊 ，不不不，说错了，一直休班木有qian啊，最近怎么话这么多，步入正题吧，今天来研究一下截流和防抖原理。（接着奏乐，接着舞）</p></blockquote><ol><li><h3 id="什么情况出现的截流和防抖"><a href="#什么情况出现的截流和防抖" class="headerlink" title="什么情况出现的截流和防抖"></a>什么情况出现的截流和防抖</h3><ul><li>当我们在鼠标移动和页面滚动的时候频繁的触犯一个函数</li><li>当属一个输入框中，输入进行查询的时候</li><li>屏幕尺寸发生改变的时候（一直在缩小放大浏览器）</li></ul><p>以上情况都会高频的触发函数，这个时候浏览器就容易卡死，难道这样就放任不管么？兄弟你不是在开玩笑吧？怎么可能不管呢。这属于前端的性能优化之一啊。</p></li><li><h3 id="防抖原理和实现"><a href="#防抖原理和实现" class="headerlink" title="防抖原理和实现"></a>防抖原理和实现</h3><ul><li><p>原理：什么是防抖呢？顾名思义那就是防止抖动啊，在你一直抖啊抖的过程，不在你抖动的时候进行操作，而是再你稳定之后进行函数的执行，也就是说，当你频繁的进行一个动作（下拉滚动条），不会一直执行所触发的函数而是在停下来之后多长时间进行触发。再来举个栗子，哎！每天举栗子也很沉的好嘛，咱们那种大厦的感应的门了解吧？比如现在有10个人一直进门（好比你一直在滚动页面），这个感应门不可能进一个人关一次门吧？这样门早就被砸了好么（浏览器奔溃了），感应门肯定是等10个人进去了，等几（比如10秒）秒，这10秒内没有人进了，就执行关门这个操作（触发的函数），10内有人进，就重新再记10秒重新计算。这就是防抖</p></li><li><p>实现思路 ：主要有两点 1.事件发生后，清除旧的计时器  2.设置行的计时器</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> box = <span class="built_in">document</span>.querySelector(<span class="string">'.box'</span>);</span></span><br><span class="line"><span class="javascript">   <span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">handler,time</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> timer = <span class="literal">null</span> ;         </span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                clearTimeout(timer);    <span class="comment">// 触发就清0 触发就清0 ； 直到不触发之后，几秒钟 </span></span></span><br><span class="line"><span class="javascript">                <span class="keyword">var</span> args = <span class="built_in">arguments</span>;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">var</span> _this = <span class="keyword">this</span>;</span></span><br><span class="line"><span class="javascript">                timer  = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                    <span class="comment">// 把box对象的这个this传给它</span></span></span><br><span class="line">                    handler.apply(_this,args);</span><br><span class="line">                &#125;,time);</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="javascript">  <span class="comment">// 要执行的动作 </span></span></span><br><span class="line"><span class="javascript">  <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params">e</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(<span class="string">"这里做点什么"</span>);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">this</span>.innerHTML = e.clientX;  </span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"><span class="javascript">  <span class="keyword">var</span> testDebounce  = debounce(handle,<span class="number">2000</span>); </span></span><br><span class="line">  box.onmousemove = testDebounce;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure><p>我觉得你肯定你开始的时候一定和我一样，为什么debounce函数要return 一个函数，那我们来写一下</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timer = <span class="literal">null</span>;</span><br><span class="line">box.onmousemove = reTime();</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reTime</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(timer)&#123;</span><br><span class="line">    clearTimeout(timer);</span><br><span class="line">  &#125;</span><br><span class="line">  timer  = setTimeout(handle,<span class="number">2000</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="comment">// todo somethings</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>reTime函数需要操作来自父级作用域的变量timer，而debounce函数就是为了创建这样一个作用域，使得每次执行reTimer函数时timer变量都是存在的。但是后边这种相对于前边就不那么优雅了，第一个timer只在函数内部进行使用，不必在全局变量中，显然闭包更符合方案。</p></li></ul></li><li><h3 id="截流原理和实现"><a href="#截流原理和实现" class="headerlink" title="截流原理和实现"></a>截流原理和实现</h3><ul><li><p>原理：知道了防抖，截流就是更简单了，在一个瀑布中，定时抽断一下，俗话讲抽刀断水水更流，不形容我们做程序哈。再来举一个吧，光举着也没人吃。比如我们正在做一个输入框，要求每输入一个字符都调用一个API来查询数据，从而实现联想、自动补全等功能，然而我们的输入速度是很快的，可能还没等第一个字符的查询结果出来，第二个字符就已经敲进去了，所以我们需要让查询频率小一点，具体做法就是在输入的过程中，每隔N秒才查询一次。</p></li><li><p>实现思路 ：确保一个计时器停止时再重新计时</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> box = <span class="built_in">document</span>.querySelector(<span class="string">".box"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">        <span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn,delay</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">let</span> timer = <span class="literal">null</span> ; </span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">throttler</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                <span class="keyword">if</span> (timer===<span class="literal">null</span>) &#123;  <span class="comment">// 只要时间不是null 就触发 。也就是说这个事件触发之后就从头算时间，到时间了也就再次触发</span></span></span><br><span class="line"><span class="javascript">                    timer = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">                        fn();</span><br><span class="line"><span class="javascript">                        timer = <span class="literal">null</span>;</span></span><br><span class="line">                    &#125;,delay)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="javascript">        <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="built_in">console</span>.log(<span class="string">'--todoSomethings---'</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">        box.onmousemove = throttle(handle,2000)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li></ul></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;最近身体疲惫，每天感觉脑子跟不上，并且很容易犯困，还好有人一直给充电，本来不太精神但是瞬间就充满能量。经过一番思想斗争之后，终于决定昨天鸽了一下，哇，真的好爽，今天早上来了还被嘲讽提前过上了公园大爷的生活，哈哈哈，不过休班一时爽，一直休班一直爽啊 
+      
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="http://yoursite.com/categories/JavaScript/"/>
+    
+    
+      <category term="防抖" scheme="http://yoursite.com/tags/%E9%98%B2%E6%8A%96/"/>
+    
+      <category term="截流" scheme="http://yoursite.com/tags/%E6%88%AA%E6%B5%81/"/>
+    
+  </entry>
   
   <entry>
     <title>图片缩放及拖拽</title>
@@ -564,32 +592,6 @@
       <category term="脚手架安装" scheme="http://yoursite.com/tags/%E8%84%9A%E6%89%8B%E6%9E%B6%E5%AE%89%E8%A3%85/"/>
     
       <category term="组件间的数据传递" scheme="http://yoursite.com/tags/%E7%BB%84%E4%BB%B6%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>前端求生之路</title>
-    <link href="http://yoursite.com/2018/12/21/go/"/>
-    <id>http://yoursite.com/2018/12/21/go/</id>
-    <published>2018-12-21T06:34:59.000Z</published>
-    <updated>2018-12-21T06:43:04.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>最近忙着加班学习  ，等哪天把学习笔记分享一下。</p></blockquote><p>根据 <a href="http://www.w3school.com.cn/" target="_blank" rel="noopener">w3schools</a>   网上的文章讲解：</p><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><ul><li>GET请求在浏览器回退时候是无害的，而POST请求会再一次提交请求的。</li><li>GET请求产生的URL地址可以被Bookmark(书签)，而POST不可以。</li><li>GET请求会被浏览器主动缓存，而POST请求不会，除非手动设置。</li><li>GET请求只能进行URL编码，而POST支持多种编码方式。</li><li>GET请求参数会被完整的保留在浏览器历史记录里，而POST请求中的参数不会被保留。</li><li>GET请求在URL中传送的参数是有长度限制的，而POST请求的长度限制要远大于GET请求的参数长度。</li><li>对参数的数据类型，GET请求只接受字符串类型，而POST请求没有限制。</li><li>GET请求比POST请求更不安全，因为参数暴露在URL上，不能用来传递敏感信息。</li><li>GET请求参数通过URL传递，POST请求参数放在Request body中。</li></ul><p>但是，实际上GET请求和POST请求本质上是没有区别的。GET请求和POST请求是HTTP协议中的两种发送请求的方法。而HTTP是基于TCP/IP的关于数据在万维网中通信的协议。</p><p>HTTP的底层是TCP/IP。所以GET请求和POST请求的底层也是TCP/IP，即GET/POST都是TCP链接，GET和POST请求能做的事情是一样的。在理论上来说，可以给GET请求加上Request body，给POST请求带上URL参数。</p><p>那么，回到这个问题上，GET请求和POST请求的区别是什么？</p><h3 id="GET和POST区别"><a href="#GET和POST区别" class="headerlink" title="GET和POST区别"></a>GET和POST区别</h3><p>在万维网中，TCP就像是汽车，我们用TCP来运输数据，但是如果道路上都是一摸一样的汽车，那么这个路线看起来是一片混乱，送急件的汽车可能为前面装载货物的汽车拦堵在路上，整个交通系统一定会瘫痪的。</p><p>为了避免这种情况的发生，交通规则HTTP诞生了，HTTP给汽车运输设定了几种服务类型，例如GET、POST、PUT、DELETE、PATCH、OPTION等，HTTP规定，当执行GET请求的时候要给汽车贴上GET标签(设置method为GET)，并且要求把传送的数据放到车顶(URL)上以方便记录，如果是POST请求，就要在车上贴上POST标签(设置method为POST)，并把货物放到车厢(Request body)中。虽然我们可以在GET请求的时候往车厢里偷偷藏点货物，或是在POST请求的时候，在车顶放一些数据。HTTP只是一个行为准则，而TCP才是GET和POST的实现基本。</p><p>那么，为什么会有对参数的大小限制呢？</p><p>在万维网这个交通网络中，除了车辆，还有运输公司。不同的浏览器(发送HTTP请求)和服务器(接收HTTP请求)就是不同的运输公司。</p><p>虽然我们我们可以在车辆上装了无限的货物，但是运输公司对于装货和卸货也是要很大成本的。他们会限制单词运输量来控制风险，数据量过大对浏览器和服务器都是很大负担。大部分浏览器会限制URL长度在2K个字符，而服务器大部分最多处理 64K大小的URL。超出的部分是不会处理的。如果我们在GET请求中在request body藏了数据，不同的服务器处理的方式是不同的，有些会卸货读取数据，有些服务器直接就会忽略，所以，不建议GET请求的Request body中放数据。</p><p>所以，从这个角度来说：GET请求和POST请求本质都是TCP链接，并无差异，但是由于HTTP的规定和浏览器、服务器的限制，导致他们在应用过程里体现出不同。</p><p>除此以外，他们还有一个重大的区别：GET请求会产生一个TCP数据包，POST请求会产生两个TCP数据包。</p><p>对于GET请求，浏览器会把header和data一并发送出去，服务器响应200，返回数据。</p><p>对于POST请求，浏览器会先发送header，服务器响应100，浏览器再发送data，服务器响应200，返回数据。</p><p>换句话来，GET请求只需要汽车跑一趟就把货物送到了，POST请求需要跑两趟，第一趟过来先和服务器打一声招呼，“嗨，我等下要送一批货物过来，你们打开门迎接我一下”，然后再回头把货物送过去。</p><p>最后，为什么不能通过GET请求来替代POST请求？<br>GET请求与POST请求都有自己的语义，不能混用。<br>在网络环境良好的情况下，发一次包的时间和发两次包的时间差别基本可以忽略不计，而在网络环境差的情况下，两次包的TCP在验证数据包完整性上，有非常大的优点。<br>并不是所有浏览器的POST请求会发送两次包，Firefox就只发送一次。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;blockquote&gt;
-&lt;p&gt;最近忙着加班学习  ，等哪天把学习笔记分享一下。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;根据 &lt;a href=&quot;http://www.w3school.com.cn/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;w3scho
-      
-    
-    </summary>
-    
-    
-      <category term="HTTP扫盲" scheme="http://yoursite.com/tags/HTTP%E6%89%AB%E7%9B%B2/"/>
     
   </entry>
   
