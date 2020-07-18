@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/07/18/Proxy/</loc>
+    
+    <lastmod>2020-07-18T15:18:20.463Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/22/RegExp/</loc>
+    
+    <lastmod>2020-07-18T14:35:52.636Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/07/15/throttle/</loc>
     
     <lastmod>2020-07-15T06:47:10.569Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>http://yoursite.com/2020/06/01/RegExp2/</loc>
     
     <lastmod>2020-06-04T08:02:01.305Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2020/05/22/RegExp/</loc>
-    
-    <lastmod>2020-05-29T07:55:07.346Z</lastmod>
     
   </url>
   

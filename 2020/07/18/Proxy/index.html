@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "4f5e7bd8"
+    });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="UJwynuXcIX">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-yu.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="今天是周末，难得的没有加班，没有出去浪，最近感觉很是无聊呀，可能我成了隔夜的杯中水吧，没有落灰，可能中了一种毒，这种毒里边还有一种蔬菜，那就是香菇呀，哈哈哈，猜到了吧，中了好菇毒，闲下来还是研究一下前端的知识吧，毕竟学海无涯，不进则退，再者也应该为了以后打算，毕竟还是要为了以后买各种东西，包括什么车啊房啊，毕竟凡人一个还是需要这些俗物的，哈哈哈，生活不止眼前的苟且，还有诗和远方。今天就看看Vue">
+<meta name="keywords" content="Proxy,数据响应式,vue双向数据流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Proxy">
+<meta property="og:url" content="http://yoursite.com/2020/07/18/Proxy/index.html">
+<meta property="og:site_name" content="Yuhior&#39;s Blog">
+<meta property="og:description" content="今天是周末，难得的没有加班，没有出去浪，最近感觉很是无聊呀，可能我成了隔夜的杯中水吧，没有落灰，可能中了一种毒，这种毒里边还有一种蔬菜，那就是香菇呀，哈哈哈，猜到了吧，中了好菇毒，闲下来还是研究一下前端的知识吧，毕竟学海无涯，不进则退，再者也应该为了以后打算，毕竟还是要为了以后买各种东西，包括什么车啊房啊，毕竟凡人一个还是需要这些俗物的，哈哈哈，生活不止眼前的苟且，还有诗和远方。今天就看看Vue">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-18T15:18:20.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Proxy">
+<meta name="twitter:description" content="今天是周末，难得的没有加班，没有出去浪，最近感觉很是无聊呀，可能我成了隔夜的杯中水吧，没有落灰，可能中了一种毒，这种毒里边还有一种蔬菜，那就是香菇呀，哈哈哈，猜到了吧，中了好菇毒，闲下来还是研究一下前端的知识吧，毕竟学海无涯，不进则退，再者也应该为了以后打算，毕竟还是要为了以后买各种东西，包括什么车啊房啊，毕竟凡人一个还是需要这些俗物的，哈哈哈，生活不止眼前的苟且，还有诗和远方。今天就看看Vue">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/07/18/Proxy/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Proxy | Yuhior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yuhior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">生活不止于眼前的苟且</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/18/Proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yuhior">
+      <meta itemprop="description" content="爱学习，爱生活">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuhior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Proxy
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-18 20:09:24 / 修改时间：23:18:20" itemprop="dateCreated datePublished" datetime="2020-07-18T20:09:24+08:00">2020-07-18</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>今天是周末，难得的没有加班，没有出去浪，最近感觉很是无聊呀，可能我成了隔夜的杯中水吧，没有落灰，可能中了一种毒，这种毒里边还有一种蔬菜，那就是香菇呀，哈哈哈，猜到了吧，中了好菇毒，闲下来还是研究一下前端的知识吧，毕竟学海无涯，不进则退，再者也应该为了以后打算，毕竟还是要为了以后买各种东西，包括什么车啊房啊，毕竟凡人一个还是需要这些俗物的，哈哈哈，生活不止眼前的苟且，还有诗和远方。今天就看看Vue到底是怎么实现数据响应的，数据变了然后视图也变了。</p>
+</blockquote>
+<ol>
+<li><h4 id="Proxy数据代理和数据劫持"><a href="#Proxy数据代理和数据劫持" class="headerlink" title="Proxy数据代理和数据劫持"></a>Proxy数据代理和数据劫持</h4><p>Proxy 也就是代理，可以帮助我们完成很多事情，例如对数据的处理，对构造函数的处理，对数据的验证，说白了，就是在我们访问对象前添加了一层拦截，可以过滤很多操作，而这些过滤，由你来定义。具体参考用法：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> data = &#123;</span></span><br><span class="line"><span class="javascript">    name:<span class="string">"xiaohua"</span>,</span></span><br><span class="line">    age:25</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line"><span class="javascript">  <span class="comment">// 用法 const p = new Proxy(target, handler)  </span></span></span><br><span class="line"><span class="javascript">  <span class="comment">//handler 一个通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 p 的行为</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">set</span>(target,prop,newValue)&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(targer,prop,newValue);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(...arguments); <span class="comment">// Reflect 就是和Proxy配合 ，set将值分配给属性的函数。返回一个Boolean，如果更新成功，则返回true。</span></span></span><br><span class="line">    &#125;,</span><br><span class="line"><span class="javascript">    <span class="keyword">get</span>(target,prop)&#123;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">console</span>.log(target，prop,newValue);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(...arguments); <span class="comment">//获取对象身上某个属性的值，类似于 target[name]。</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"><span class="javascript">  p.age = <span class="number">21</span>; <span class="comment">// 改变属性值，调用了Proxy的set方法 console 出的是object(data),age,21(新值)</span></span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(p.name);  <span class="comment">// 调用了get ，console 出来的是21</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="实现数据渲染"><a href="#实现数据渲染" class="headerlink" title="实现数据渲染"></a>实现数据渲染</h4><p>想一下我们使用vue的时候，是不是数据data里边的变量，能使用 双花括号 写上变量的名称就可以渲染到浏览器上了呢，那么来看看到底是怎么实现的呢？那我们上边说的Proxy不可能随便说说的吧，怎么会呢？无事不登三宝殿，来吧用起来吧。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">  &#123;&#123;name&#125;&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;&#123;message&#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span> = <span class="string">"myvue.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> vm = <span class="keyword">new</span> vue(&#123;   <span class="comment">// 自己写一个小的vue 吧。激动么？</span></span></span><br><span class="line"><span class="javascript">    el:<span class="string">"#app"</span>,</span></span><br><span class="line">    data:&#123;</span><br><span class="line"><span class="javascript">      name:<span class="string">"xiaohua"</span>,</span></span><br><span class="line"><span class="javascript">      message:<span class="string">"带着小明"</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">vue</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(option)&#123; <span class="comment">// 实例中的参数</span></span><br><span class="line">    <span class="keyword">this</span>.option = option;</span><br><span class="line">    <span class="keyword">this</span>._data = <span class="keyword">this</span>.option.data;</span><br><span class="line">    <span class="keyword">this</span>.el = <span class="built_in">document</span>.querySelector(<span class="keyword">this</span>.option.el);</span><br><span class="line">    <span class="keyword">this</span>.compileNode(<span class="keyword">this</span>.el);</span><br><span class="line">  &#125;</span><br><span class="line">  compileNode(el)&#123;  <span class="comment">// 进行渲染的函数来了啊</span></span><br><span class="line">    <span class="keyword">let</span> child = el.childeNodes;</span><br><span class="line">    <span class="built_in">console</span>.log(child);</span><br><span class="line">    childe.forEach(<span class="function">(<span class="params">node</span>)=&gt;</span>&#123;  <span class="comment">// 用[...child]可以保证是数组 </span></span><br><span class="line">      <span class="keyword">if</span>(node.nodeType===<span class="number">3</span>)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"这是文本的节点"</span>)；</span><br><span class="line">        <span class="keyword">let</span> text = node.textContent; <span class="comment">// 应该是一个&#123;&#123;name&#125;&#125;这样的东西</span></span><br><span class="line">        <span class="comment">//进行匹配</span></span><br><span class="line">        <span class="keyword">let</span> reg = <span class="regexp">/\&#123;\&#123;\s* ([^\s\&#123;\&#125;]+)  \s*\&#125;\&#125;/</span>;  <span class="comment">// 正则 [ ]表示取反，中间是 两端是&#123;&#123; 但是中间不能再是&#123;了 </span></span><br><span class="line">        <span class="keyword">if</span>(reg.test(text))&#123;</span><br><span class="line">          <span class="keyword">let</span> $<span class="number">1</span> = <span class="built_in">RegExp</span>.$<span class="number">1</span>; <span class="comment">//匹配的第一个元素 也就是name</span></span><br><span class="line">          <span class="comment">//if(this._data[$1]) 写成下边这样</span></span><br><span class="line">          <span class="keyword">this</span>._data[$<span class="number">1</span>]&amp;&amp;(node.textContent=text.repalce(reg,this_data[$<span class="number">1</span>]));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nodeType===<span class="number">1</span>)&#123; <span class="comment">// 也就是节点元素 div或者其他</span></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"这是一个节点元素"</span>)；</span><br><span class="line">        <span class="keyword">this</span>.compileNode(node);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h4 id="双向数据绑定"><a href="#双向数据绑定" class="headerlink" title="双向数据绑定"></a>双向数据绑定</h4><p>我们渲染完数据了，那肯定想知道v-model这种双向数据绑定的了，不说下去我感觉自己都得好奇死，现在坐下来用小脑袋想一想，v-model 事件，1.要判定node上是不是有v-model属性，2.监听v-model的值的变化去改变data中的数据，3.监听一下(自定义一下这个事件)这个数据变化，再把这个渲染到页面有这个值的元素中</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">v-model</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">  &#123;&#123;test&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">let</span> vm = <span class="keyword">new</span> vue(&#123;</span></span><br><span class="line"><span class="javascript">    el:<span class="string">'#app'</span>,</span></span><br><span class="line">    data:&#123;</span><br><span class="line"><span class="javascript">      test:<span class="string">"双绑定数据"</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(vm)</span></span><br><span class="line"><span class="javascript">  <span class="built_in">console</span>.log(vm._data.name);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">vue</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(option)&#123; </span><br><span class="line">    <span class="keyword">this</span>.option = option;</span><br><span class="line">    <span class="keyword">this</span>._data = <span class="keyword">this</span>.option.data;</span><br><span class="line">    <span class="keyword">this</span>.el = <span class="built_in">document</span>.querySelector(<span class="keyword">this</span>.option.el);</span><br><span class="line">    <span class="keyword">this</span>.compileNode(<span class="keyword">this</span>.el);</span><br><span class="line">  &#125;</span><br><span class="line">  compileNode(el)&#123;  </span><br><span class="line">    <span class="keyword">let</span> child = el.childeNodes;</span><br><span class="line">    <span class="built_in">console</span>.log(child);</span><br><span class="line">    childe.forEach(<span class="function">(<span class="params">node</span>)=&gt;</span>&#123; </span><br><span class="line">      <span class="keyword">if</span>(node.nodeType===<span class="number">3</span>)&#123;</span><br><span class="line">        <span class="keyword">let</span> text = node.textContent; </span><br><span class="line">        <span class="keyword">let</span> reg = <span class="regexp">/\&#123;\&#123;\s* ([^\s\&#123;\&#125;]+)  \s*\&#125;\&#125;/</span>; </span><br><span class="line">        <span class="keyword">if</span>(reg.test(text))&#123;</span><br><span class="line">          <span class="keyword">let</span> $<span class="number">1</span> = <span class="built_in">RegExp</span>.$<span class="number">1</span>; </span><br><span class="line">          <span class="keyword">this</span>._data[$<span class="number">1</span>]&amp;&amp;(node.textContent=text.repalce(reg,this_data[$<span class="number">1</span>]));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nodeType===<span class="number">1</span>)&#123; </span><br><span class="line">        <span class="comment">// 1. 这是一个input 元素在这里完成第一步 </span></span><br><span class="line">        <span class="keyword">let</span> attr = node.attributes; <span class="comment">// 获取所有节点属性对象</span></span><br><span class="line">        <span class="keyword">if</span>(attr.hasOwnProperty(<span class="string">'v-model'</span>)	)&#123;<span class="comment">// 对象中是否含有属性为v-model的</span></span><br><span class="line">          <span class="keyword">let</span> keyName = attr[<span class="string">'v-model'</span>].nodeValue;</span><br><span class="line">          node.value = <span class="keyword">this</span>.data_[keyName];<span class="comment">//先把data中的数据放进input的value里边  属于渲染</span></span><br><span class="line">         	<span class="comment">// 2.监听一下input值的变化，改变data的值</span></span><br><span class="line">          node.addEventListener(<span class="string">'input'</span>,e=&gt;&#123;</span><br><span class="line">            <span class="keyword">this</span>._data[keyName] = node.value; </span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.compileNode(node);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 3. 怎么监听data数值中的变化呢？那是不想到上边的数据劫持，正戏来了,开始的proxy该用上了，劫持一下数据</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">vue</span> <span class="keyword">extends</span> <span class="title">EventTarget</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(option)&#123; </span><br><span class="line">   	<span class="keyword">super</span>();    <span class="comment">//进行继承</span></span><br><span class="line">    <span class="keyword">this</span>.option = option;</span><br><span class="line">    <span class="keyword">this</span>._data = <span class="keyword">this</span>.option.data;</span><br><span class="line">    <span class="keyword">this</span>.el = <span class="built_in">document</span>.querySelector(<span class="keyword">this</span>.option.el);</span><br><span class="line">    <span class="keyword">this</span>.compileNode(<span class="keyword">this</span>.el);</span><br><span class="line">  &#125;</span><br><span class="line">  observe(data)&#123; </span><br><span class="line">    <span class="keyword">let</span> _this = <span class="keyword">this</span> ;</span><br><span class="line">    <span class="keyword">this</span>._data = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;</span><br><span class="line">      <span class="keyword">set</span>(target,propertyKey,newValue)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(propertyKey); <span class="comment">// 对应data的test</span></span><br><span class="line">         <span class="keyword">let</span> event =  <span class="keyword">new</span> CustomEvent(propertyKey,&#123; <span class="comment">// 自定义一个事件，在渲染的时候触发这个函数</span></span><br><span class="line">           detail:newValue</span><br><span class="line">         &#125;);</span><br><span class="line">        _this.dispatchEvent(event); <span class="comment">// 触发事件 注意this的指向 ，然后将这事件绑定到渲染&#123;&#123;&#125;&#125;的值的时侯</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(...arguments);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查漏补缺一下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 在学习一下自定义事件 ，要自定义事件必须继承一下自定义事件 EventTarget的方法   </span></span><br><span class="line"><span class="comment">//extends是继承   EventTarget 是将会创建一个新的EventTarget 对象实例。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个事件对象，名字为newEvent，类型为build </span></span><br><span class="line"><span class="keyword">var</span> newEvent = <span class="keyword">new</span> CustomEvent(<span class="string">'build'</span>, &#123; <span class="attr">bubbles</span>:<span class="literal">true</span>,<span class="attr">cancelable</span>:<span class="literal">true</span>,<span class="attr">composed</span>:<span class="literal">true</span> &#125;);</span><br><span class="line">       </span><br><span class="line"><span class="comment">//给这个事件对象创建一个属性并赋值，这里绑定的事件要和我们创建的事件类型相同，不然无法触发 </span></span><br><span class="line">newEvent.name = <span class="string">"新的事件！"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将自定义事件绑定在document对象上 </span></span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">"build"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  alert(<span class="string">"你触发了使用CustomEvent创建的自定义事件！"</span> + newEvent.name);</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br><span class="line"><span class="comment">//触发自定义事件 ，也叫做发布吧</span></span><br><span class="line"><span class="built_in">document</span>.dispatchEvent(newEvent);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="4">
+<li><h4 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">vue</span> <span class="keyword">extends</span> <span class="title">EventTarget</span></span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(option)&#123;  </span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.option=option;</span><br><span class="line">        <span class="keyword">this</span>._data = <span class="keyword">this</span>.option.data;</span><br><span class="line">        <span class="keyword">this</span>.el = <span class="built_in">document</span>.querySelector(<span class="keyword">this</span>.option.el);</span><br><span class="line">        <span class="keyword">this</span>.observe(<span class="keyword">this</span>._data)</span><br><span class="line">        <span class="keyword">this</span>.compileNode(<span class="keyword">this</span>.el);</span><br><span class="line">    &#125;</span><br><span class="line">    observe(data)&#123;</span><br><span class="line">        <span class="keyword">let</span> _this = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">this</span>._data = <span class="keyword">new</span> <span class="built_in">Proxy</span>(data,&#123;</span><br><span class="line">            <span class="keyword">set</span>(target,prop,newValue)&#123;</span><br><span class="line">                <span class="built_in">console</span>.log(prop);</span><br><span class="line">                <span class="keyword">let</span> event =  <span class="keyword">new</span> CustomEvent(prop,&#123;</span><br><span class="line">                    detail:newValue</span><br><span class="line">                &#125;);</span><br><span class="line">                _this.dispatchEvent(event);  </span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">Reflect</span>.set(...arguments);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    compileNode(el)&#123;  </span><br><span class="line">        <span class="keyword">let</span> child =el.childNodes;</span><br><span class="line">        <span class="built_in">console</span>.log(child);</span><br><span class="line">        child.forEach(<span class="function"><span class="params">node</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (node.nodeType === <span class="number">3</span>) &#123; </span><br><span class="line">                <span class="keyword">let</span> text = node.textContent;</span><br><span class="line">                <span class="keyword">let</span> reg = <span class="regexp">/\&#123;\&#123;\s*([^\s\&#123;\&#125;]+)\s*\&#125;\&#125;/</span>;  </span><br><span class="line">                <span class="keyword">if</span> (reg.test(text)) &#123;</span><br><span class="line">                    <span class="keyword">let</span> $<span class="number">1</span> = <span class="built_in">RegExp</span>.$<span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">this</span>._data[$<span class="number">1</span>]&amp;&amp;(node.textContent = text.replace(reg,<span class="keyword">this</span>._data[$<span class="number">1</span>]));</span><br><span class="line">                    <span class="keyword">this</span>.addEventListener($<span class="number">1</span>,c=&gt;&#123;  <span class="comment">//将上边自定义的函数，绑定到上边</span></span><br><span class="line">                        node.textContent =  text.replace(reg,c.detail);</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(node.nodeType===<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="keyword">let</span>  attr  = node.attributes;</span><br><span class="line">                <span class="built_in">console</span>.log(attr);</span><br><span class="line">                <span class="keyword">if</span> (attr.hasOwnProperty(<span class="string">'v-model'</span>)) &#123;</span><br><span class="line">                    <span class="keyword">let</span> keyName = attr[<span class="string">'v-model'</span>].nodeValue;</span><br><span class="line">                    node.value = <span class="keyword">this</span>._data[keyName];</span><br><span class="line">                    node.addEventListener(<span class="string">'input'</span>,e=&gt;&#123;</span><br><span class="line">                        <span class="keyword">this</span>._data[keyName] = node.value;  </span><br><span class="line">                    &#125;)</span><br><span class="line">                    <span class="built_in">console</span>.log(keyName);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">this</span>.compileNode(node);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">----本文结束<i class="fa fa-paw"></i>感谢您的阅读----</div>
+    
+</div>
+      
+    </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Proxy/" rel="tag"><i class="fa fa-tag"></i> Proxy</a>
+          
+            <a href="/tags/数据响应式/" rel="tag"><i class="fa fa-tag"></i> 数据响应式</a>
+          
+            <a href="/tags/vue双向数据流/" rel="tag"><i class="fa fa-tag"></i> vue双向数据流</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/15/throttle/" rel="next" title="截流和防抖">
+                <i class="fa fa-chevron-left"></i> 截流和防抖
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+	  
+		
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+	  
+	</div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzk0NC8xNDQ3NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Yuhior">
+            
+              <p class="site-author-name" itemprop="name">Yuhior</p>
+              <p class="site-description motion-element" itemprop="description">爱学习，爱生活</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/yuhior" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://yuhior.github.io/2018/09/25/async/#more" title="异步四部曲" target="_blank">异步四部曲</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://yuhior.github.io/2018/07/25/module/#more" title="模块化" target="_blank">模块化</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Proxy数据代理和数据劫持"><span class="nav-number">1.</span> <span class="nav-text">Proxy数据代理和数据劫持</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现数据渲染"><span class="nav-number">2.</span> <span class="nav-text">实现数据渲染</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双向数据绑定"><span class="nav-number">3.</span> <span class="nav-text">双向数据绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完整代码"><span class="nav-number">4.</span> <span class="nav-text">完整代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yuhior</span>
+
+  
+
+  
+</div>
+
+
+
+
+ <div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客量<span id="busuanzi_value_site_uv"></span>次
+</span>
+</div>
+<span class="post-meta-divider">|</span>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+
+<!--
+
+  <span class="post-meta-divider">|</span>
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.3.0</div>
+
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <script>
+     var link = "" ;
+    var oImg = document.querySelectorAll("img");
+    oImg.forEach(function(item,index){
+
+      if( item.getAttribute("src").indexOf("sinaimg") > 0 ){
+            // 给这个标签加上referrerPlicy属性
+        item.setAttribute("referrerpolicy","no-referrer");
+            // 备份图片的src
+        link = item.getAttribute("src");
+            // 重新设置src，让页面重新加载一次图片
+        item.setAttribute("src",link);
+      }
+    })
+  </script>
+</body>
+</html>
