@@ -127,7 +127,7 @@
 <meta property="og:description" content="我胡汉三终于又又又回来了，哈哈哈哈……什么？你说我不着调？不可能的我堂堂Yuhior 怎么可能干不着调的事呢？回顾一下最近的生活和学习，越发觉得每天光用框架啊，什么Vue啊，什么React啊，当然这些我都不会啊，哈哈哈，学习这些感觉力不从心，决心重新学习js，打好自己的基础能力，深知自己这座小平房地基不稳，哪能期盼盖出高楼啊，那最后塌了，不得害死自己啊，所以最近在看书，看红宝书（超级推荐），今天">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://wx2.sinaimg.cn/mw690/005N9IKrly1gf94yd1sahj30fo053t8j.jpg">
-<meta property="og:updated_time" content="2020-07-18T15:27:08.523Z">
+<meta property="og:updated_time" content="2020-07-18T15:32:06.362Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="说说正则的那些事">
 <meta name="twitter:description" content="我胡汉三终于又又又回来了，哈哈哈哈……什么？你说我不着调？不可能的我堂堂Yuhior 怎么可能干不着调的事呢？回顾一下最近的生活和学习，越发觉得每天光用框架啊，什么Vue啊，什么React啊，当然这些我都不会啊，哈哈哈，学习这些感觉力不从心，决心重新学习js，打好自己的基础能力，深知自己这座小平房地基不稳，哪能期盼盖出高楼啊，那最后塌了，不得害死自己啊，所以最近在看书，看红宝书（超级推荐），今天">
@@ -410,7 +410,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-07-18 23:27:08" itemprop="dateModified" datetime="2020-07-18T23:27:08+08:00">2020-07-18</time>
+                <time title="修改时间：2020-07-18 23:32:06" itemprop="dateModified" datetime="2020-07-18T23:32:06+08:00">2020-07-18</time>
               
             
           </span>
@@ -541,18 +541,20 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/\b/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"[JS]Lesson_01.mp4"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line"><span class="comment">// [#JS#]#Lesson_01#.#mp4#</span></span><br></pre></td></tr></table></figure>
 <p>稍微的解释一波，强调不是狡辩😂😂😂，第一个#是在”[“和”J”之间的位置，第二个也就是”S”和”]”之间  ….</p>
 </li>
+<li><p>\B  也就是\b的反义 ，那么这么讲也就好理解了 ，也就是\B是反义非单词边界。例如在字符串中所有的位置中，扣掉\b，剩下的都是\b的。 具体：/w与/w、\W与\W 、\W与$之间的位置，来个例子吧</p>
+</li>
 </ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/\B/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"[JS]Lesson_01.mp4"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line"><span class="comment">// #[J#S]L#e#s#s#o#n#_#0#1.m#p#4</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>(?=p) 其中p就是那个上边的子模式(或模式也就是随便一个)，即 p前边的位置。比如（?= t ),表示””字符前边的位置</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/(?=l)/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"[JS]Lesson_01.mp4"</span>;</span><br><span class="line">   <span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line">   <span class="comment">//he#l#lo</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>(?!p) 也就是（?=p)的反面意思</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     <span class="keyword">var</span> reg = <span class="regexp">/(?!p)/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"hello"</span>;</span><br><span class="line">     <span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line">     <span class="comment">//#h#e#l#l#o#</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-</li>
-<li><p>\B  也就是\b的反义 ，那么这么讲也就好理解了 ，也就是\B是反义非单词边界。例如在字符串中所有的位置中，扣掉\b，剩下的都是\b的。 具体：/w与/w、\W与\W 、\W与$之间的位置，来个例子吧</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/\B/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"[JS]Lesson_01.mp4"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line"><span class="comment">// #[J#S]L#e#s#s#o#n#_#0#1.m#p#4</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>(?=p) 其中p就是那个上边的子模式(或模式也就是随便一个)，即 p前边的位置。比如（?= t ),表示””字符前边的位置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> reg = <span class="regexp">/(?=l)/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"[JS]Lesson_01.mp4"</span>;</span><br><span class="line">   <span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line">   <span class="comment">//he#l#lo</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>(?!p) 也就是（?=p)的反面意思</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     <span class="keyword">var</span> reg = <span class="regexp">/(?!p)/g</span>;</span><br><span class="line"><span class="keyword">var</span> result = <span class="string">"hello"</span>;</span><br><span class="line">     <span class="built_in">console</span>.log(result.replace(reg,<span class="string">"#"</span>));</span><br><span class="line">     <span class="comment">//#h#e#l#l#o#</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <ol start="3">
