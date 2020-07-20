@@ -126,17 +126,17 @@
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="最近从这个月的博客当中，也不难发现最近掉进了同步和异步的坑里，然后就在这里爬啊爬啊的，爬没爬出来不知道，不过现在有了一些见解分享给大家。并且查资料的过程中，发现阮一峰大神在文档中写到：”上个月，我偶然看到了Philip Roberts的演讲《Help, I’m stuck in an event-loop》。这才尴尬地发现，自己的理解是错的。我决定重写这个题目，详细、完整、正确地描述JavaS">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005N9IKrly1fuky4kglnxj30j60bkq3f.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fuaie01gelj30gg0320sv.jpg">
-<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005N9IKrly1fuaiepl64dj30gg03b3yq.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fukkond6p2j30qg04rmx9.jpg">
-<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005N9IKrly1fuklqmprlwj30qn038t8r.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fukxfx9z6zj30q3032t8p.jpg">
-<meta property="og:updated_time" content="2018-08-24T10:08:52.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfL6hQ.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfqfoD.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Ufq4Fe.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfqWdO.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfqIWd.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Ufq5JH.jpg">
+<meta property="og:updated_time" content="2020-07-20T02:52:58.118Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="同步异步详解">
 <meta name="twitter:description" content="最近从这个月的博客当中，也不难发现最近掉进了同步和异步的坑里，然后就在这里爬啊爬啊的，爬没爬出来不知道，不过现在有了一些见解分享给大家。并且查资料的过程中，发现阮一峰大神在文档中写到：”上个月，我偶然看到了Philip Roberts的演讲《Help, I’m stuck in an event-loop》。这才尴尬地发现，自己的理解是错的。我决定重写这个题目，详细、完整、正确地描述JavaS">
-<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/005N9IKrly1fuky4kglnxj30j60bkq3f.jpg">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/20/UfL6hQ.jpg">
 
 
 
@@ -398,12 +398,24 @@
                 
               
 
-              <time title="创建时间：2018-08-24 10:59:18 / 修改时间：18:08:52" itemprop="dateCreated datePublished" datetime="2018-08-24T10:59:18+08:00">2018-08-24</time>
+              <time title="创建时间：2018-08-24 10:59:18" itemprop="dateCreated datePublished" datetime="2018-08-24T10:59:18+08:00">2018-08-24</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-20 10:52:58" itemprop="dateModified" datetime="2020-07-20T10:52:58+08:00">2020-07-20</time>
               
             
           </span>
@@ -454,7 +466,7 @@
       
 
       
-        <p><img src="http://wx2.sinaimg.cn/mw690/005N9IKrly1fuky4kglnxj30j60bkq3f.jpg" alt="心静如水"></p>
+        <p><img src="https://s1.ax1x.com/2020/07/20/UfL6hQ.jpg" alt="心静如水"></p>
 <blockquote>
 <p>最近从这个月的博客当中，也不难发现最近掉进了同步和异步的坑里，然后就在这里爬啊爬啊的，爬没爬出来不知道，不过现在有了一些见解分享给大家。并且查资料的过程中，发现阮一峰大神在文档中写到：”上个月，我偶然看到了Philip Roberts的演讲《Help, I’m stuck in an event-loop》。这才尴尬地发现，自己的理解是错的。我决定重写这个题目，详细、完整、正确地描述JavaScript引擎的内部运行机制。下面就是我的重写。” ，我猛的发现连这样的大牛都有理解错的时候，何况是我这样的渣渣，所以更应该准确认真理解。</p>
 </blockquote>
@@ -464,26 +476,26 @@
 <li>纯JavaScript代码并不是异步的（不使用异步API等）像这样</li>
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'aaaaa'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'bbbbb'</span>);</span><br><span class="line">&#125;</span><br><span class="line">A();</span><br><span class="line">B();</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx1.sinaimg.cn/mw690/005N9IKrly1fuaie01gelj30gg0320sv.jpg" alt="Guo Mao Rain"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqfoD.jpg" alt="Guo Mao Rain"></p>
 <ol start="2">
 <li>看下边的代码会 先执行函数a,而且不会等到a中的延迟函数执行完才执行函数b, 在延迟函数被触发的过程中就执行了函数b,当js引擎的event 队列空闲时才会去执行队列里等待的setTimeout的回调函数，这就是一个异步的例子。</li>
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx4.sinaimg.cn/mw690/005N9IKrly1fuaiepl64dj30gg03b3yq.jpg" alt="Guo Mao Rain"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Ufq4Fe.jpg" alt="Guo Mao Rain"></p>
 <p>setTimeout 本身就是一个异步操作 ，将回调函数放在一个特殊的”任务队列”中(挂起)，只有”任务队列”通知主线程，某个异步任务可以执行了（这里就是延迟一秒到了，主进程空闲下来才会执行这个回调函数），有些人会觉得你本身就是延迟一秒执行啊！ 那么我们来看看将延迟时间设为0情况会是什么样？</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx1.sinaimg.cn/mw690/005N9IKrly1fukkond6p2j30qg04rmx9.jpg" alt="Guo Mao Rain"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqWdO.jpg" alt="Guo Mao Rain"></p>
 <p>举一个别人的栗子 ：在公路上，汽车一辆接一辆，有条不紊的运行。这时，有一辆车坏掉了。假如它停在原地进行修理，那么后面的车就会被堵住没法行驶，交通就乱套了。幸好旁边有应急车道，可以把故障车辆推到应急车道修理，而正常的车流不会受到任何影响。等车修好了，再从应急车道回到正常车道即可。唯一的影响就是，应急车道用多了，原来的车辆之间的顺序会有点乱。</p>
 <h3 id="我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义"><a href="#我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义" class="headerlink" title="我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义"></a>我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义</h3><ol>
 <li>同步回调</li>
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params">arg3</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'callback Totle is:'</span> + arg3)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">arg1, arg2, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> Total = arg1 + arg2;</span><br><span class="line">  callback(Total);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'mainFunction Totle is:'</span> + Total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn(<span class="number">2</span>, <span class="number">2</span>, callback)</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx3.sinaimg.cn/mw690/005N9IKrly1fuklqmprlwj30qn038t8r.jpg" alt="Guo Mao Rain"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqIWd.jpg" alt="Guo Mao Rain"></p>
 <ol start="2">
 <li>异步回调</li>
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f2 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    setTimeout(cb,<span class="number">1000</span>)        <span class="comment">//用setTimeout()模拟耗时操作</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f1 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1(f2);</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx1.sinaimg.cn/mw690/005N9IKrly1fukxfx9z6zj30q3032t8p.jpg" alt="Guo Mao Rain"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Ufq5JH.jpg" alt="Guo Mao Rain"></p>
 <p>这里我们用setTimeout()来模拟耗时操作的前提是js中的setTimeout()函数支持异步处理，所以我们得到的结果是 f1 finished ，f2 finished</p>
 <ol start="3">
 <li>再来一个node的异步回调</li>

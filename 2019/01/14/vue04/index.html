@@ -126,16 +126,16 @@
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="Vuex数据管理 如何理解数据管理? 这个Vuex就是vue中的数据管理中心 ，相信看过亮剑的大家都知道 ，本来独立团老李管理独立团那是想喝酒喝酒想吃肉吃肉 ，想打仗打仗，但这样的独立团就是比较混乱啊，就是和我们的vue一样 如果数据，都在data里边随取随用，那也一样很混乱，所以我们就需要一个单独的数据中心。也就是赵刚赵政委来了，管独立团的生活了，政委管生活，团长管打仗 ，这样分工也就比较明确。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fyw3yto2u7j30x40l5di5.jpg">
-<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005N9IKrly1fyw42lxa9lj30t806cjrv.jpg">
-<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005N9IKrly1fyw4ccbyewj312c067aam.jpg">
-<meta property="og:image" content="http://wx3.sinaimg.cn/mw690/005N9IKrly1fyw4gdofhmj311408i753.jpg">
-<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005N9IKrly1fyw25cxe0gj30jg0fat8p.jpg">
-<meta property="og:updated_time" content="2019-01-23T03:02:18.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf6Iun.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf6f3Q.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf6W9g.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf6hcj.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf64js.jpg">
+<meta property="og:updated_time" content="2020-07-20T01:37:32.459Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vuex使用及理解">
 <meta name="twitter:description" content="Vuex数据管理 如何理解数据管理? 这个Vuex就是vue中的数据管理中心 ，相信看过亮剑的大家都知道 ，本来独立团老李管理独立团那是想喝酒喝酒想吃肉吃肉 ，想打仗打仗，但这样的独立团就是比较混乱啊，就是和我们的vue一样 如果数据，都在data里边随取随用，那也一样很混乱，所以我们就需要一个单独的数据中心。也就是赵刚赵政委来了，管独立团的生活了，政委管生活，团长管打仗 ，这样分工也就比较明确。">
-<meta name="twitter:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fyw3yto2u7j30x40l5di5.jpg">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/20/Uf6Iun.jpg">
 
 
 
@@ -414,7 +414,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-01-23 11:02:18" itemprop="dateModified" datetime="2019-01-23T11:02:18+08:00">2019-01-23</time>
+                <time title="修改时间：2020-07-20 09:37:32" itemprop="dateModified" datetime="2020-07-20T09:37:32+08:00">2020-07-20</time>
               
             
           </span>
@@ -525,19 +525,19 @@
 <li><p>分析源码</p>
 <ul>
 <li><p>mutation通过commit修改state ，可以看到通过this._withCommit函数处理</p>
-<p><img src="http://wx1.sinaimg.cn/mw690/005N9IKrly1fyw3yto2u7j30x40l5di5.jpg" alt></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Uf6Iun.jpg" alt></p>
 </li>
 <li><p>看_ withCommit   ，_ withCommit函数的参数是fn  也就是我们上边的更改state的函数，在执行fn之前 ，将this.comiting =true ,等fn执行完 ，再将this. _commiting = commiting</p>
-<p><img src="http://wx4.sinaimg.cn/mw690/005N9IKrly1fyw42lxa9lj30t806cjrv.jpg" alt></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Uf6f3Q.jpg" alt></p>
 </li>
 <li><p>那么这个commiting和 严格模式的strict:true 设置有什么关系</p>
-<p><img src="http://wx3.sinaimg.cn/mw690/005N9IKrly1fyw4ccbyewj312c067aam.jpg" alt></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Uf6W9g.jpg" alt></p>
 </li>
 <li><p>enableStrictMode() 干了什么  ?   </p>
 <blockquote>
 <p>在 enableStrictMode 函数内部，调用了 $watch 函数来观察 state的变化。当state变化时，就会调用 assert 函数，判断 store. _commiting( 上边的 this.committing） 的值，如果不为 true，就会报出异常： </p>
 </blockquote>
-<p><img src="http://wx3.sinaimg.cn/mw690/005N9IKrly1fyw4gdofhmj311408i753.jpg" alt></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/Uf6hcj.jpg" alt></p>
 </li>
 <li><p>所以通过外部直接修改state，则没有执行 commit 函数，也就没有执行 <em>withCommit 函数，进而 this.</em> _ withCommitting 的值 不为 true，故当执行 enableStrictMode 时，则会执行 assert 函数，因为_withCommitting不为true，则报出异常了。</p>
 </li>
@@ -579,7 +579,7 @@
 <p>Mutations：用来改变状态。需要注意的是，Mutations 里的修改状态的操作必须是同步的。在根实例中注册了 store 后， 可以用 <code>this.$store.commit(&#39;xxx&#39;, data)</code> 来通知 Mutations 来改状态。</p>
 <p>Actions：通过调用 Mutations 来改状态。Actions 可以包含异步操作。在根实例中注册了 store 后， 可以用 <code>this.$store.dispatch(&#39;xxx&#39;, data)</code> 来存触发 Action。</p>
 </li>
-<li><h4 id="Vuex完整数据流程"><a href="#Vuex完整数据流程" class="headerlink" title="Vuex完整数据流程"></a>Vuex完整数据流程</h4><p><img src="http://wx2.sinaimg.cn/mw690/005N9IKrly1fyw25cxe0gj30jg0fat8p.jpg" alt></p>
+<li><h4 id="Vuex完整数据流程"><a href="#Vuex完整数据流程" class="headerlink" title="Vuex完整数据流程"></a>Vuex完整数据流程</h4><p><img src="https://s1.ax1x.com/2020/07/20/Uf64js.jpg" alt></p>
 </li>
 </ol>
 

@@ -126,15 +126,15 @@
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="有时候当你没有坚定下决心做某件事情的时候，任何理由都可能成为阻挡你的原因，我觉得那是因为生活逼得你还是不太紧，当你坚定的要去发生改变时，你会发现的开始成果就会是很大的。不得不说改变对一个人有多重要。  排序有几种方法，这里主要说快速排序和冒泡排序。 冒泡排序 冒泡排序就是将最大数的冒泡到最后  实现思路：将从头开始将相邻的两项相比，每一次对比相邻两个数据的大小，小的排在前面，如果前面的数据比后">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://wx2.sinaimg.cn/mw690/005N9IKrly1fv4fm468rcj30m80bkado.jpg">
-<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005N9IKrly1fv4jzd0ae3j30sf0ilwgr.jpg">
-<meta property="og:image" content="http://wx4.sinaimg.cn/mw690/005N9IKrly1fv4jzhz2yxj30wa0dmmxq.jpg">
-<meta property="og:image" content="http://wx1.sinaimg.cn/mw690/005N9IKrly1fv4jzq0mpzj30nh0ecjrd.jpg">
-<meta property="og:updated_time" content="2018-09-10T09:06:08.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/Uf2oDA.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfgYWD.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfgJJO.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/20/UfgGFK.jpg">
+<meta property="og:updated_time" content="2020-07-20T01:47:55.188Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题之排序">
 <meta name="twitter:description" content="有时候当你没有坚定下决心做某件事情的时候，任何理由都可能成为阻挡你的原因，我觉得那是因为生活逼得你还是不太紧，当你坚定的要去发生改变时，你会发现的开始成果就会是很大的。不得不说改变对一个人有多重要。  排序有几种方法，这里主要说快速排序和冒泡排序。 冒泡排序 冒泡排序就是将最大数的冒泡到最后  实现思路：将从头开始将相邻的两项相比，每一次对比相邻两个数据的大小，小的排在前面，如果前面的数据比后">
-<meta name="twitter:image" content="http://wx2.sinaimg.cn/mw690/005N9IKrly1fv4fm468rcj30m80bkado.jpg">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/20/Uf2oDA.jpg">
 
 
 
@@ -396,12 +396,24 @@
                 
               
 
-              <time title="创建时间：2018-09-10 14:12:14 / 修改时间：17:06:08" itemprop="dateCreated datePublished" datetime="2018-09-10T14:12:14+08:00">2018-09-10</time>
+              <time title="创建时间：2018-09-10 14:12:14" itemprop="dateCreated datePublished" datetime="2018-09-10T14:12:14+08:00">2018-09-10</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-07-20 09:47:55" itemprop="dateModified" datetime="2020-07-20T09:47:55+08:00">2020-07-20</time>
               
             
           </span>
@@ -452,7 +464,7 @@
       
 
       
-        <p><img src="http://wx2.sinaimg.cn/mw690/005N9IKrly1fv4fm468rcj30m80bkado.jpg" alt="Autumn Is Coming"></p>
+        <p><img src="https://s1.ax1x.com/2020/07/20/Uf2oDA.jpg" alt="Autumn Is Coming"></p>
 <blockquote>
 <p>有时候当你没有坚定下决心做某件事情的时候，任何理由都可能成为阻挡你的原因，我觉得那是因为生活逼得你还是不太紧，当你坚定的要去发生改变时，你会发现的开始成果就会是很大的。不得不说改变对一个人有多重要。</p>
 </blockquote>
@@ -462,17 +474,17 @@
 <li>实现思路：将从头开始将相邻的两项相比，每一次对比相邻两个数据的大小，小的排在前面，如果前面的数据比后面的大就交换这两个数的位置，持续直到数据结束。最大的数将会在最后。再重复前边的操作。</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> arr = [<span class="number">90</span>,<span class="number">0</span>,<span class="number">-10</span>,<span class="number">88</span>,<span class="number">999</span>,<span class="number">100</span>,<span class="number">102</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">20</span>];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sortArr</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> j=<span class="number">0</span>;j&lt;arr.length<span class="number">-1</span>-i;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>])&#123;</span><br><span class="line">                <span class="keyword">var</span> temp =arr[j+<span class="number">1</span>];</span><br><span class="line">                arr[j+<span class="number">1</span>]=arr[j];</span><br><span class="line">                arr[j]=temp;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"第"</span>+(++count)+<span class="string">"次排序后："</span>+ arr);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(sortArr(arr));</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx4.sinaimg.cn/mw690/005N9IKrly1fv4jzd0ae3j30sf0ilwgr.jpg" alt="images 1"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfgYWD.jpg" alt="images 1"></p>
 <h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><ul>
 <li>先找到一个基准点(一般都是数组中部)，然后数组被该基准点分为两部分，依次依次与该基准点比较，如果比基准点小则放在左边，反之放在右边，分别用两个空数组去存储比较后的数据，最后然后在重复这个步骤</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">90</span>,<span class="number">0</span>,<span class="number">-10</span>,<span class="number">88</span>,<span class="number">999</span>,<span class="number">100</span>,<span class="number">102</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">20</span>];</span><br><span class="line"><span class="keyword">var</span> times = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">quickSort</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (arr.length&lt;<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> arr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> centerIndex = <span class="built_in">Math</span>.floor(arr.length/<span class="number">2</span>); <span class="comment">//取到数组中间的位置</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> centerVal = arr.splice(centerIndex, <span class="number">1</span>);<span class="comment">//获取基准点的值splice(index,1)函数可以返回数组中被删除的那个数arr[index+1]  </span></span><br><span class="line">    <span class="keyword">let</span> left = [];  <span class="comment">//用来存放左边的数</span></span><br><span class="line">    <span class="keyword">let</span> right = []; <span class="comment">//用来存放右边的数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;arr.length;i++)&#123;  </span><br><span class="line">        <span class="keyword">if</span>(arr[i]&lt;centerVal)&#123;  </span><br><span class="line">            left.push(arr[i]);<span class="comment">//比基准点小的放在左边数组  </span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"这是left："</span>+left);</span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">else</span>&#123;  </span><br><span class="line">            right.push(arr[i]);<span class="comment">//比基准点大的放在右边数组  </span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"这是right："</span>+right);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"第"</span>+(++times)+<span class="string">"次排序后："</span>+arr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//递归执行以上操作,对左右两个数组进行以上操作，直到数组长度为&lt;=1；  </span></span><br><span class="line">    <span class="keyword">return</span> quickSort(left).concat(centerVal,quickSort(right));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(quickSort(arr));</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx4.sinaimg.cn/mw690/005N9IKrly1fv4jzhz2yxj30wa0dmmxq.jpg" alt="images 2"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfgJJO.jpg" alt="images 2"></p>
 <ul>
 <li>直接利用数组的排序方法sort来实现</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">90</span>,<span class="number">0</span>,<span class="number">-10</span>,<span class="number">88</span>,<span class="number">999</span>,<span class="number">100</span>,<span class="number">102</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">20</span>];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compare</span>(<span class="params">a,b</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a-b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> newArr = arr.sort(compare);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(newArr);</span><br></pre></td></tr></table></figure>
-<p><img src="http://wx1.sinaimg.cn/mw690/005N9IKrly1fv4jzq0mpzj30nh0ecjrd.jpg" alt="images 3"></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfgGFK.jpg" alt="images 3"></p>
 
       
     </div>
