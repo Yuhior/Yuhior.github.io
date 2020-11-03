@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/11/03/yougan/</loc>
+    
+    <lastmod>2020-11-03T06:51:52.157Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/09/09/mongodb2/</loc>
     
-    <lastmod>2020-09-24T01:39:08.646Z</lastmod>
+    <lastmod>2020-11-03T06:44:20.891Z</lastmod>
     
   </url>
   
