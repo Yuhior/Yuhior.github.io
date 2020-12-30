@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-12-30T09:50:38.507Z</updated>
+  <updated>2020-12-30T09:49:12.530Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,36 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>ssr首屏渲染Vue代码实战来喽</title>
-    <link href="http://yoursite.com/2020/12/30/ssr2/"/>
-    <id>http://yoursite.com/2020/12/30/ssr2/</id>
-    <published>2020-12-30T09:49:24.000Z</published>
-    <updated>2020-12-30T09:50:38.507Z</updated>
-    
-    <content type="html"><![CDATA[<p>为下一篇代码进行留位置</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;为下一篇代码进行留位置&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-      <category term="Vue" scheme="http://yoursite.com/categories/Vue/"/>
-    
-    
-      <category term="Vue" scheme="http://yoursite.com/tags/Vue/"/>
-    
-      <category term="Node" scheme="http://yoursite.com/tags/Node/"/>
-    
-      <category term="ssr" scheme="http://yoursite.com/tags/ssr/"/>
-    
-  </entry>
   
   <entry>
     <title>ssr首屏渲染你懂了么？</title>
@@ -587,6 +557,34 @@
       <category term="Redux单向数据流" scheme="http://yoursite.com/tags/Redux%E5%8D%95%E5%90%91%E6%95%B0%E6%8D%AE%E6%B5%81/"/>
     
       <category term="react-redux" scheme="http://yoursite.com/tags/react-redux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>react-router</title>
+    <link href="http://yoursite.com/2019/03/15/react-router/"/>
+    <id>http://yoursite.com/2019/03/15/react-router/</id>
+    <published>2019-03-15T14:37:19.000Z</published>
+    <updated>2020-05-22T03:46:15.585Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>使用react怎么能少了router的使用</p></blockquote><h3 id="react-router"><a href="#react-router" class="headerlink" title="react-router"></a>react-router</h3><ul><li><h5 id="使用react-router-dom进行路由"><a href="#使用react-router-dom进行路由" class="headerlink" title="使用react-router-dom进行路由"></a>使用react-router-dom进行路由</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install react-router-dom --save</span><br></pre></td></tr></table></figure></li><li><h5 id="模式使用"><a href="#模式使用" class="headerlink" title="模式使用"></a>模式使用</h5><blockquote><p>相比于vuejs的模式使用react略有不同 ，vue的模式是在配置里边设置是否使用history模式，而react则是通过使用不同的组件来使用history模式还是hash模式</p></blockquote><ul><li>HashRouter ：哈希模式</li><li>BrowserRouter：</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import &#123;BrowserRouter,HashRouter&#125; from &quot;react-router-dom&quot;</span><br><span class="line">//在外层再包一层HashRouter或者BrowserRouter</span><br><span class="line">ReactDOM.render(</span><br><span class="line">    // 外层包一层Provider ，提供数据和组件间的数据传递一样</span><br><span class="line">    &lt;HashRouter&gt;</span><br><span class="line">        &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">            &lt;App /&gt;</span><br><span class="line">        &lt;/Provider&gt;</span><br><span class="line">    &lt;/HashRouter&gt;,</span><br><span class="line">    document.getElementById(&apos;root&apos;)</span><br><span class="line">);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//  app.js   </span><br><span class="line">class App extends Component&#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return &lt;div&gt;</span><br><span class="line">            &lt;div&gt;</span><br><span class="line">                &lt;Link to=&quot;/&quot;&gt;首页&lt;/Link&gt;</span><br><span class="line">                &lt;Link to=&quot;/about&quot;&gt;关于&lt;/Link&gt;</span><br><span class="line">                &lt;Link to=&quot;/detail&quot;&gt;详情&lt;/Link&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">            &lt;Route exact path=&quot;/&quot; component=&#123;Counter&#125;/&gt;  // exact 全部匹配根路径</span><br><span class="line">            &lt;Route path=&quot;/about&quot; component=&#123;About&#125;/&gt;</span><br><span class="line">            &lt;Route path=&quot;/detail&quot; component=&#123;Detail&#125;/&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">function About() &#123;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;关于页面&lt;/h2&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&#125;</span><br><span class="line">function Detail() &#123;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;这是我们的详情页面&lt;/h2&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><h5 id="路由参数"><a href="#路由参数" class="headerlink" title="路由参数"></a>路由参数</h5><blockquote><p>和vue路由的使用一样 ，是使用：id的形式定义参数</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//  使用 detail </span><br><span class="line">&lt;Route path=&quot;/detail/:id&quot; component=&#123;Detail&#125;&gt;&lt;/Route&gt;</span><br><span class="line">function Detail(props) &#123;</span><br><span class="line">    return &lt;div&gt;</span><br><span class="line">        &lt;p&gt;Detail:&#123;props.match.params.id&#125;&lt;/p&gt;  </span><br><span class="line">        &lt;h2&gt;这是我们的详情页面&lt;/h2&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><h5 id="Redirect-：跳转"><a href="#Redirect-：跳转" class="headerlink" title="Redirect ：跳转"></a>Redirect ：跳转</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Redirect to=&quot;/&quot;&gt; &lt;/Redirect&gt;  // 跳转到连接</span><br></pre></td></tr></table></figure></li></ul><ul><li><h5 id="dva"><a href="#dva" class="headerlink" title="dva"></a>dva</h5><p>redux + redux-sage + react-redux + react-router-dom = dva</p></li><li><h5 id="使用的react-router-dom"><a href="#使用的react-router-dom" class="headerlink" title="使用的react -router-dom"></a>使用的react -router-dom</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install react-router-dom --save</span><br></pre></td></tr></table></figure></li><li><h5 id="使用模式"><a href="#使用模式" class="headerlink" title="使用模式"></a>使用模式</h5><blockquote><p>使用模式相比于vuejs不同，vue里面是配置是否使用history模式，而react中是使用不同的组件进行区分</p></blockquote><p>HashRouter</p></li><li></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;使用react怎么能少了router的使用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;react-router&quot;&gt;&lt;a href=&quot;#react-router&quot; class=&quot;headerlink&quot; title=&quot;react-router
+      
+    
+    </summary>
+    
+      <category term="React" scheme="http://yoursite.com/categories/React/"/>
+    
+    
+      <category term="react-router" scheme="http://yoursite.com/tags/react-router/"/>
     
   </entry>
   

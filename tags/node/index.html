@@ -372,32 +372,6 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2020/12/30/ssr2/" itemprop="url">
-              
-                <span itemprop="name">ssr首屏渲染Vue代码实战来喽</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-12-30T17:49:24+08:00" content="2020-12-30">
-          12-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
             <a class="post-title-link" href="/2020/12/30/ssr/" itemprop="url">
               
                 <span itemprop="name">ssr首屏渲染你懂了么？</span>
@@ -467,7 +441,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1251,7 +1225,58 @@
   </script>
 </body>
 </html>
-)
+dDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <script>
+     var link = "" ;
+    var oImg = document.querySelectorAll("img");
+    oImg.forEach(function(item,index){
+
+      if( item.getAttribute("src").indexOf("sinaimg") > 0 ){
+            // 给这个标签加上referrerPlicy属性
+        item.setAttribute("referrerpolicy","no-referrer");
+            // 备份图片的src
+        link = item.getAttribute("src");
+            // 重新设置src，让页面重新加载一次图片
+        item.setAttribute("src",link);
+      }
+    })
   </script>
 </body>
 </html>
