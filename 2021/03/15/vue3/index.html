@@ -121,7 +121,7 @@
   <meta name="description" content="好久不见，甚是想念；一日不见，如隔三秋；一天不打上房揭瓦；我觉得我就属于最后一句话吧。虽说二月很短但是也不是一直不学习的理由，虽然二月有个新年，也并不是我 不学习的理由；每次来总是这样哈哈哈哈，但是闲下来是真的需要学习啊 ，我还是需要挣money ，毕竟还要面朝大海春暖花开；毕竟还要劈柴喂马周游世界；还有粮食和蔬菜；还有未来媳妇的包包哈哈哈哈未来孩子的奥利奥。尤大已经发布vue3.0 有一阵子了">
 <meta name="keywords" content="vue3.0">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Yuhior&#39;s Blog">
+<meta property="og:title" content="vue3.0初体验">
 <meta property="og:url" content="http://yoursite.com/2021/03/15/vue3/index.html">
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="好久不见，甚是想念；一日不见，如隔三秋；一天不打上房揭瓦；我觉得我就属于最后一句话吧。虽说二月很短但是也不是一直不学习的理由，虽然二月有个新年，也并不是我 不学习的理由；每次来总是这样哈哈哈哈，但是闲下来是真的需要学习啊 ，我还是需要挣money ，毕竟还要面朝大海春暖花开；毕竟还要劈柴喂马周游世界；还有粮食和蔬菜；还有未来媳妇的包包哈哈哈哈未来孩子的奥利奥。尤大已经发布vue3.0 有一阵子了">
@@ -129,9 +129,9 @@
 <meta property="og:image" content="https://s3.ax1x.com/2021/03/15/6D9mi8.md.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/03/15/6DCX4K.md.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/03/15/6DiUW8.png">
-<meta property="og:updated_time" content="2021-03-15T10:16:34.719Z">
+<meta property="og:updated_time" content="2021-03-16T01:01:58.378Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Yuhior&#39;s Blog">
+<meta name="twitter:title" content="vue3.0初体验">
 <meta name="twitter:description" content="好久不见，甚是想念；一日不见，如隔三秋；一天不打上房揭瓦；我觉得我就属于最后一句话吧。虽说二月很短但是也不是一直不学习的理由，虽然二月有个新年，也并不是我 不学习的理由；每次来总是这样哈哈哈哈，但是闲下来是真的需要学习啊 ，我还是需要挣money ，毕竟还要面朝大海春暖花开；毕竟还要劈柴喂马周游世界；还有粮食和蔬菜；还有未来媳妇的包包哈哈哈哈未来孩子的奥利奥。尤大已经发布vue3.0 有一阵子了">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/03/15/6D9mi8.md.png">
 
@@ -150,7 +150,7 @@
   };
 </script>
 
-  <title> | Yuhior's Blog</title>
+  <title>vue3.0初体验 | Yuhior's Blog</title>
   
 
 
@@ -370,7 +370,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">vue3.0初体验
               
             
           </h1>
@@ -395,12 +395,24 @@
                 
               
 
-              <time title="创建时间：2021-03-15 13:47:23 / 修改时间：18:16:34" itemprop="dateCreated datePublished" datetime="2021-03-15T13:47:23+08:00">2021-03-15</time>
+              <time title="创建时间：2021-03-15 13:47:23" itemprop="dateCreated datePublished" datetime="2021-03-15T13:47:23+08:00">2021-03-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-16 09:01:58" itemprop="dateModified" datetime="2021-03-16T09:01:58+08:00">2021-03-16</time>
               
             
           </span>
@@ -503,10 +515,6 @@
 <li><p>computed 计算属性与之前2.x 差不多，只是使用前要先引用</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">setup(props: Prop, <span class="attr">context</span>: SetupContext) &#123;</span><br><span class="line">  <span class="keyword">const</span> count = ref(<span class="number">0</span>);</span><br><span class="line"> 	<span class="keyword">const</span> changCount = computed(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> count.value ++</span><br><span class="line">  &#125;) </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    count</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
-</li>
-</ol>
-<ul>
 <li><p>watchEffect监听</p>
 <p>通过ref或者reactive去创建多个响应式的值，当任何一个值发生改变的时候，立即触发这个函数。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">setup(props: Prop, <span class="attr">context</span>: SetupContext) &#123;</span><br><span class="line">  <span class="keyword">const</span> count = ref(<span class="number">0</span>);</span><br><span class="line">  watchEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(count)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    count</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -514,7 +522,7 @@
 <li><p>如果有不正确的理解等彻底理解透之后，随时进行更新</p>
 </li>
 </ul>
-<ol start="3">
+</li>
 <li><h4 id="深度对比"><a href="#深度对比" class="headerlink" title="深度对比"></a>深度对比</h4><ul>
 <li><p>在 vue 中， <code>Object.defineProperty</code> 无法监控到数据的下标变化，导致直接通过数组下标给数组设置新值时，无法做到实时响应。目前 vue 只针对数组的变异方法 <code>push/pop/shift/unshift/splice/sort/reverse</code> 做了 hack 处理，存在响应局限。<code>Proxy</code> 是 <code>ES6</code> 中新增的一个特性，翻译过来意思是”代理”，用在这里表示由它来“代理”某些操作。 <code>Proxy</code> 让我们能够以简洁易懂的方式控制外部对对象的访问。其功能非常类似于设计模式中的代理模式。</p>
 <p><code>Proxy</code> 可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。</p>
@@ -523,10 +531,9 @@
 </ul>
 <p>  [Proxy]: <a href="https://yuhior.com/2020/07/18/Proxy/#more" target="_blank" rel="noopener">https://yuhior.com/2020/07/18/Proxy/#more</a></p>
 <ul>
-<li></li>
+<li>其他下一篇进行补充</li>
 </ul>
 </li>
-<li></li>
 </ol>
 
       
