@@ -174,54 +174,6 @@
       </tags>
   </entry>
   <entry>
-    <title>同步异步详解</title>
-    <url>/2018/08/24/Function/</url>
-    <content><![CDATA[<p><img src="https://s1.ax1x.com/2020/07/20/UfL6hQ.jpg" alt="心静如水"></p>
-<blockquote>
-<p>最近从这个月的博客当中，也不难发现最近掉进了同步和异步的坑里，然后就在这里爬啊爬啊的，爬没爬出来不知道，不过现在有了一些见解分享给大家。并且查资料的过程中，发现阮一峰大神在文档中写到：”上个月，我偶然看到了Philip Roberts的演讲《Help, I’m stuck in an event-loop》。这才尴尬地发现，自己的理解是错的。我决定重写这个题目，详细、完整、正确地描述JavaScript引擎的内部运行机制。下面就是我的重写。” ，我猛的发现连这样的大牛都有理解错的时候，何况是我这样的渣渣，所以更应该准确认真理解。</p>
-</blockquote>
-<p>与这篇相关的文章看我上一篇<a href="https://yuhior.github.io/2018/08/15/callback/#more" target="_blank" rel="noopener">JavaScript回调函数</a></p>
-<h3 id="先了解一下为什么有异步"><a href="#先了解一下为什么有异步" class="headerlink" title="先了解一下为什么有异步"></a>先了解一下为什么有异步</h3><p>JavaScript语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。<br>单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就不得不一直等着。<br>如果排队是因为计算量大，CPU忙不过来，倒也算了，但是很多时候CPU是闲着的，因为IO设备（输入输出设备）很慢（比如Ajax操作从网络读取数据），不得不等着结果出来，再往下执行。<br>JavaScript语言的设计者意识到，这时主线程完全可以不管IO设备，挂起处于等待中的任务，先运行排在后面的任务。等到IO设备返回了结果，再回过头，把挂起的任务继续执行下去。<br>于是，所有任务可以分成两种，一种是同步任务（synchronous），另一种是异步任务（asynchronous）。同步任务指的是，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务；异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。</p>
-<h3 id="同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）"><a href="#同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）" class="headerlink" title="同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）"></a>同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）</h3><ol>
-<li>纯JavaScript代码并不是异步的（不使用异步API等）像这样</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'aaaaa'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'bbbbb'</span>);</span><br><span class="line">&#125;</span><br><span class="line">A();</span><br><span class="line">B();</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/UfqfoD.jpg" alt="Guo Mao Rain"></p>
-<ol start="2">
-<li>看下边的代码会 先执行函数a,而且不会等到a中的延迟函数执行完才执行函数b, 在延迟函数被触发的过程中就执行了函数b,当js引擎的event 队列空闲时才会去执行队列里等待的setTimeout的回调函数，这就是一个异步的例子。</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/Ufq4Fe.jpg" alt="Guo Mao Rain"></p>
-<p>setTimeout 本身就是一个异步操作 ，将回调函数放在一个特殊的”任务队列”中(挂起)，只有”任务队列”通知主线程，某个异步任务可以执行了（这里就是延迟一秒到了，主进程空闲下来才会执行这个回调函数），有些人会觉得你本身就是延迟一秒执行啊！ 那么我们来看看将延迟时间设为0情况会是什么样？</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/UfqWdO.jpg" alt="Guo Mao Rain"></p>
-<p>举一个别人的栗子 ：在公路上，汽车一辆接一辆，有条不紊的运行。这时，有一辆车坏掉了。假如它停在原地进行修理，那么后面的车就会被堵住没法行驶，交通就乱套了。幸好旁边有应急车道，可以把故障车辆推到应急车道修理，而正常的车流不会受到任何影响。等车修好了，再从应急车道回到正常车道即可。唯一的影响就是，应急车道用多了，原来的车辆之间的顺序会有点乱。</p>
-<h3 id="我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义"><a href="#我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义" class="headerlink" title="我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义"></a>我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义</h3><ol>
-<li>同步回调</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params">arg3</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'callback Totle is:'</span> + arg3)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">arg1, arg2, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> Total = arg1 + arg2;</span><br><span class="line">  callback(Total);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'mainFunction Totle is:'</span> + Total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn(<span class="number">2</span>, <span class="number">2</span>, callback)</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/UfqIWd.jpg" alt="Guo Mao Rain"></p>
-<ol start="2">
-<li>异步回调</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f2 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    setTimeout(cb,<span class="number">1000</span>)        <span class="comment">//用setTimeout()模拟耗时操作</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f1 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1(f2);</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/Ufq5JH.jpg" alt="Guo Mao Rain"></p>
-<p>这里我们用setTimeout()来模拟耗时操作的前提是js中的setTimeout()函数支持异步处理，所以我们得到的结果是 f1 finished ，f2 finished</p>
-<ol start="3">
-<li>再来一个node的异步回调</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'input.txt'</span>,<span class="string">'utf-8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</span><br><span class="line">    <span class="built_in">console</span>.log(data.toString());</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"程序执行结束!"</span>);</span><br></pre></td></tr></table></figure>
-<p>按照javascript单线程应该是先执行fs.readFile函数(读取文件)，一直到读完之后  才执行后面的console.log(),然而node中的fs.readFile是支持异步处理的，所以到fs.readFile()不会阻塞，继续向后执行，当读取文件之后在自动调取传入的匿名函数。</p>
-<p>说明 ：比如node的 fs.readFile()函数是异步的，我们站在巨人的肩膀上进行开发。你要问他为什么的异步的，那只能你研究下node的这个函数是怎么实现的，setTimeout()也一样。<br>如果有理解不到之处请大牛指出，这样我就能能知道自己哪理解有误了。</p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>异步和同步</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>说说正则那些事2</title>
     <url>/2020/06/01/RegExp2/</url>
     <content><![CDATA[<blockquote>
@@ -356,6 +308,54 @@
       <tags>
         <tag>正则</tag>
         <tag>RegExp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>同步异步详解</title>
+    <url>/2018/08/24/Function/</url>
+    <content><![CDATA[<p><img src="https://s1.ax1x.com/2020/07/20/UfL6hQ.jpg" alt="心静如水"></p>
+<blockquote>
+<p>最近从这个月的博客当中，也不难发现最近掉进了同步和异步的坑里，然后就在这里爬啊爬啊的，爬没爬出来不知道，不过现在有了一些见解分享给大家。并且查资料的过程中，发现阮一峰大神在文档中写到：”上个月，我偶然看到了Philip Roberts的演讲《Help, I’m stuck in an event-loop》。这才尴尬地发现，自己的理解是错的。我决定重写这个题目，详细、完整、正确地描述JavaScript引擎的内部运行机制。下面就是我的重写。” ，我猛的发现连这样的大牛都有理解错的时候，何况是我这样的渣渣，所以更应该准确认真理解。</p>
+</blockquote>
+<p>与这篇相关的文章看我上一篇<a href="https://yuhior.github.io/2018/08/15/callback/#more" target="_blank" rel="noopener">JavaScript回调函数</a></p>
+<h3 id="先了解一下为什么有异步"><a href="#先了解一下为什么有异步" class="headerlink" title="先了解一下为什么有异步"></a>先了解一下为什么有异步</h3><p>JavaScript语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。<br>单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就不得不一直等着。<br>如果排队是因为计算量大，CPU忙不过来，倒也算了，但是很多时候CPU是闲着的，因为IO设备（输入输出设备）很慢（比如Ajax操作从网络读取数据），不得不等着结果出来，再往下执行。<br>JavaScript语言的设计者意识到，这时主线程完全可以不管IO设备，挂起处于等待中的任务，先运行排在后面的任务。等到IO设备返回了结果，再回过头，把挂起的任务继续执行下去。<br>于是，所有任务可以分成两种，一种是同步任务（synchronous），另一种是异步任务（asynchronous）。同步任务指的是，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务；异步任务指的是，不进入主线程、而进入”任务队列”（task queue）的任务，只有”任务队列”通知主线程，某个异步任务可以执行了，该任务才会进入主线程执行。</p>
+<h3 id="同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）"><a href="#同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）" class="headerlink" title="同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）"></a>同步和异步（回调不一定是异步，异步可通过回调实现，注意区分关系）</h3><ol>
+<li>纯JavaScript代码并不是异步的（不使用异步API等）像这样</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'aaaaa'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'bbbbb'</span>);</span><br><span class="line">&#125;</span><br><span class="line">A();</span><br><span class="line">B();</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqfoD.jpg" alt="Guo Mao Rain"></p>
+<ol start="2">
+<li>看下边的代码会 先执行函数a,而且不会等到a中的延迟函数执行完才执行函数b, 在延迟函数被触发的过程中就执行了函数b,当js引擎的event 队列空闲时才会去执行队列里等待的setTimeout的回调函数，这就是一个异步的例子。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/Ufq4Fe.jpg" alt="Guo Mao Rain"></p>
+<p>setTimeout 本身就是一个异步操作 ，将回调函数放在一个特殊的”任务队列”中(挂起)，只有”任务队列”通知主线程，某个异步任务可以执行了（这里就是延迟一秒到了，主进程空闲下来才会执行这个回调函数），有些人会觉得你本身就是延迟一秒执行啊！ 那么我们来看看将延迟时间设为0情况会是什么样？</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"执行a函数"</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行a函数的延迟函数"</span>);</span><br><span class="line">  &#125;,<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"执行b函数"</span>);</span><br><span class="line">&#125;;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqWdO.jpg" alt="Guo Mao Rain"></p>
+<p>举一个别人的栗子 ：在公路上，汽车一辆接一辆，有条不紊的运行。这时，有一辆车坏掉了。假如它停在原地进行修理，那么后面的车就会被堵住没法行驶，交通就乱套了。幸好旁边有应急车道，可以把故障车辆推到应急车道修理，而正常的车流不会受到任何影响。等车修好了，再从应急车道回到正常车道即可。唯一的影响就是，应急车道用多了，原来的车辆之间的顺序会有点乱。</p>
+<h3 id="我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义"><a href="#我们再来说开始的注意-回调函数不一定-异步操作-异步操作可以通过回调来实现-注意两者的定义" class="headerlink" title="我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义"></a>我们再来说开始的注意 回调函数不一定 = 异步操作 异步操作可以通过回调来实现  注意两者的定义</h3><ol>
+<li>同步回调</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> callback = <span class="function"><span class="keyword">function</span>(<span class="params">arg3</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'callback Totle is:'</span> + arg3)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">arg1, arg2, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> Total = arg1 + arg2;</span><br><span class="line">  callback(Total);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'mainFunction Totle is:'</span> + Total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn(<span class="number">2</span>, <span class="number">2</span>, callback)</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/UfqIWd.jpg" alt="Guo Mao Rain"></p>
+<ol start="2">
+<li>异步回调</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f2 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    setTimeout(cb,<span class="number">1000</span>)        <span class="comment">//用setTimeout()模拟耗时操作</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'f1 finished'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1(f2);</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/Ufq5JH.jpg" alt="Guo Mao Rain"></p>
+<p>这里我们用setTimeout()来模拟耗时操作的前提是js中的setTimeout()函数支持异步处理，所以我们得到的结果是 f1 finished ，f2 finished</p>
+<ol start="3">
+<li>再来一个node的异步回调</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="string">'input.txt'</span>,<span class="string">'utf-8'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">return</span> <span class="built_in">console</span>.error(err);</span><br><span class="line">    <span class="built_in">console</span>.log(data.toString());</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"程序执行结束!"</span>);</span><br></pre></td></tr></table></figure>
+<p>按照javascript单线程应该是先执行fs.readFile函数(读取文件)，一直到读完之后  才执行后面的console.log(),然而node中的fs.readFile是支持异步处理的，所以到fs.readFile()不会阻塞，继续向后执行，当读取文件之后在自动调取传入的匿名函数。</p>
+<p>说明 ：比如node的 fs.readFile()函数是异步的，我们站在巨人的肩膀上进行开发。你要问他为什么的异步的，那只能你研究下node的这个函数是怎么实现的，setTimeout()也一样。<br>如果有理解不到之处请大牛指出，这样我就能能知道自己哪理解有误了。</p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>异步和同步</tag>
       </tags>
   </entry>
   <entry>
@@ -522,6 +522,43 @@
       </tags>
   </entry>
   <entry>
+    <title>JavaScript回调函数</title>
+    <url>/2018/08/15/callback/</url>
+    <content><![CDATA[<p><img src="https://s1.ax1x.com/2020/07/20/UhSMCT.jpg" alt="Guo Mao Rain"></p>
+<blockquote>
+<p>实践的过程真是可以发现问题的过程的，自我总结的过程，使用nodeJs的过程中express的回调真的是太难受了，学习的时候感觉demo比较小，没感觉出来，但是等做东西之后，我的Tian简直忍受不了，回调嵌套一层一层又一层，别着急写完这层还有下一层（喝完这杯还有下一杯），人总是懒惰的，于是就想有没有回调的好方法，于是找到了promise和async/await的异步调用方法，这里先不说。突然意识到我去，函数调用模糊不清。</p>
+</blockquote>
+<ol>
+<li>回调 先上英文定义：A callback is a function that is passed as an argument to another function and is executed after its parent function has completed。<br>用我蹩脚的英文二级水品翻译一下：回调函数就是一个参数，将这个函数作为参数传到另一个函数里面，当那个函数执行完之后，再执行传进去的这个函数。这个过程就叫做回调。</li>
+</ol>
+<p>举个别人的栗子(果然自己家的栗子没有别人家的好吃)：约会结束后你送你女朋友回家，离别时，你肯定会说：“到家了给我发条信息，我很担心你。” 对不，然后你女朋友回家以后还真给你发了条信息。小伙子，你有戏了。其实这就是一个回调的过程。你留了个参数函数（要求女朋友给你发条信息）给你女朋友，然后你女朋友回家，回家的动作是主函数。她必须先回到家以后，主函数执行完了，再执行传进去的函数，然后你就收到一条信息了。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">  callback();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"主函数执行完了！"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="string">"回调函数b"</span>);</span><br><span class="line">   &#125;, <span class="number">3000</span>); <span class="comment">// 这里是模仿耗时操作</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// callback函数以参数形式传递，保证变量的灵活性</span></span><br><span class="line">a(b);</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/07/20/UhSQ8U.jpg" alt="Guo Mao Rain"></p>
+<ol start="2">
+<li>普通的函数调用和回调函数有什么区别呢？</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    b();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hello world'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i &lt; <span class="number">1000000000</span>;i++)&#123;</span><br><span class="line">        n++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br><span class="line">a(); <span class="comment">//hello world</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">    callback.call(<span class="keyword">this</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hello world'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i &lt; <span class="number">1000000000</span>;i++)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">a(b); <span class="comment">//hello world</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>性能没有区别</li>
+<li>回调函数是作为参数传递的,操作更加灵活，比如，你可以定义一个函数c,那可以运行b(c)，普通的函数调用当你在函数内运行函数的时候，就失去了变量的灵活性。</li>
+</ul>
+<ol start="3">
+<li>可以通过回调函数来实现异步 假定有两个函数f1和f2，后者等待前者的执行结果。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">f1();</span><br><span class="line">f2();</span><br></pre></td></tr></table></figure>
+<p>f1是一个很耗时的任务，那么就可以考虑改写f1将f2写成f1的回调函数</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">　　setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">　　　　<span class="built_in">console</span>.log(<span class="string">"f1的任务代码"</span>);　　　</span><br><span class="line">　　&#125;, <span class="number">3000</span>);<span class="comment">//模拟一个耗时的操作</span></span><br><span class="line">  callback();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"f2的任务代码"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line">f1(f2)</span><br></pre></td></tr></table></figure>
+<p><a href="https://yuhior.github.io/2018/08/15/callback/#more" target="_blank" rel="noopener">同步和异步详解</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>初识回调</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>闭包你理解了么？</title>
     <url>/2020/12/24/colsure/</url>
     <content><![CDATA[<blockquote>
@@ -569,43 +606,6 @@
       </categories>
       <tags>
         <tag>闭包</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JavaScript回调函数</title>
-    <url>/2018/08/15/callback/</url>
-    <content><![CDATA[<p><img src="https://s1.ax1x.com/2020/07/20/UhSMCT.jpg" alt="Guo Mao Rain"></p>
-<blockquote>
-<p>实践的过程真是可以发现问题的过程的，自我总结的过程，使用nodeJs的过程中express的回调真的是太难受了，学习的时候感觉demo比较小，没感觉出来，但是等做东西之后，我的Tian简直忍受不了，回调嵌套一层一层又一层，别着急写完这层还有下一层（喝完这杯还有下一杯），人总是懒惰的，于是就想有没有回调的好方法，于是找到了promise和async/await的异步调用方法，这里先不说。突然意识到我去，函数调用模糊不清。</p>
-</blockquote>
-<ol>
-<li>回调 先上英文定义：A callback is a function that is passed as an argument to another function and is executed after its parent function has completed。<br>用我蹩脚的英文二级水品翻译一下：回调函数就是一个参数，将这个函数作为参数传到另一个函数里面，当那个函数执行完之后，再执行传进去的这个函数。这个过程就叫做回调。</li>
-</ol>
-<p>举个别人的栗子(果然自己家的栗子没有别人家的好吃)：约会结束后你送你女朋友回家，离别时，你肯定会说：“到家了给我发条信息，我很担心你。” 对不，然后你女朋友回家以后还真给你发了条信息。小伙子，你有戏了。其实这就是一个回调的过程。你留了个参数函数（要求女朋友给你发条信息）给你女朋友，然后你女朋友回家，回家的动作是主函数。她必须先回到家以后，主函数执行完了，再执行传进去的函数，然后你就收到一条信息了。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">  callback();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"主函数执行完了！"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="string">"回调函数b"</span>);</span><br><span class="line">   &#125;, <span class="number">3000</span>); <span class="comment">// 这里是模仿耗时操作</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// callback函数以参数形式传递，保证变量的灵活性</span></span><br><span class="line">a(b);</span><br></pre></td></tr></table></figure>
-<p><img src="https://s1.ax1x.com/2020/07/20/UhSQ8U.jpg" alt="Guo Mao Rain"></p>
-<ol start="2">
-<li>普通的函数调用和回调函数有什么区别呢？</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    b();</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hello world'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i &lt; <span class="number">1000000000</span>;i++)&#123;</span><br><span class="line">        n++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br><span class="line">a(); <span class="comment">//hello world</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">    callback.call(<span class="keyword">this</span>);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'hello world'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>;i &lt; <span class="number">1000000000</span>;i++)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">a(b); <span class="comment">//hello world</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>性能没有区别</li>
-<li>回调函数是作为参数传递的,操作更加灵活，比如，你可以定义一个函数c,那可以运行b(c)，普通的函数调用当你在函数内运行函数的时候，就失去了变量的灵活性。</li>
-</ul>
-<ol start="3">
-<li>可以通过回调函数来实现异步 假定有两个函数f1和f2，后者等待前者的执行结果。</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">f1();</span><br><span class="line">f2();</span><br></pre></td></tr></table></figure>
-<p>f1是一个很耗时的任务，那么就可以考虑改写f1将f2写成f1的回调函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">　　setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">　　　　<span class="built_in">console</span>.log(<span class="string">"f1的任务代码"</span>);　　　</span><br><span class="line">　　&#125;, <span class="number">3000</span>);<span class="comment">//模拟一个耗时的操作</span></span><br><span class="line">  callback();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"f2的任务代码"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行</span></span><br><span class="line">f1(f2)</span><br></pre></td></tr></table></figure>
-<p><a href="https://yuhior.github.io/2018/08/15/callback/#more" target="_blank" rel="noopener">同步和异步详解</a></p>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>初识回调</tag>
       </tags>
   </entry>
   <entry>
@@ -974,6 +974,43 @@
       </tags>
   </entry>
   <entry>
+    <title>node中请求静态文件（图片例子）</title>
+    <url>/2018/11/06/fs/</url>
+    <content><![CDATA[<blockquote>
+<p>读node的API过程中发现了response的中一句</p>
+<p>The response inherits from <a href="https://nodejs.org/api/http.html" target="_blank" rel="noopener">Stream</a>, and additionally implements the following:</p>
+<p>（这个类实现了（而不是继承自）<a href="http://nodejs.cn/s/9JUnJ8" target="_blank" rel="noopener">可写流</a> 接口。 它是一个有以下事件的 [<code>EventEmitter</code>]：）</p>
+</blockquote>
+<ol>
+<li><h3 id="来理解一下-fs-createReadStream-filePath-pipe-response"><a href="#来理解一下-fs-createReadStream-filePath-pipe-response" class="headerlink" title="来理解一下  fs.createReadStream( filePath).pipe(response);"></a>来理解一下  fs.createReadStream( filePath).pipe(response);</h3><ul>
+<li>createReadStrem 是返回 : &lt;fs.ReadStream&gt;  详见<a href="http://nodejs.cn/s/YuDKX1" target="_blank" rel="noopener">可读流</a>。</li>
+<li>response 当然就是响应</li>
+<li>pipe是将两个数据流连接起来。</li>
+</ul>
+</li>
+<li><p>这样就可以输出数据流了么？</p>
+<ul>
+<li>我们知道WriteStream （可写流是对数据要被写入的目的地的一种抽象。）</li>
+<li>所有可写流的例子（包括fs的写入流）都实现了 stream.Writable类定义的接口。</li>
+<li>也就是说可以输出数据流</li>
+<li>而前言提到response 也实现了可写流接口 </li>
+<li>那么fs.createReadStream 与response拼接响应，就可以输出了</li>
+</ul>
+</li>
+<li><p>来个小例子</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">'url'</span>);</span><br><span class="line"><span class="keyword">const</span> path =<span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 从命令行参数获取root目录，默认是当前目录:</span></span><br><span class="line"><span class="keyword">var</span> root = path.resolve(process.argv[<span class="number">2</span>] || <span class="string">'.'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Static root dir: '</span> + root);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建服务器:</span></span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 获得URL的path，类似 '/css/bootstrap.css':</span></span><br><span class="line">    <span class="keyword">var</span> pathname = url.parse(request.url).pathname;</span><br><span class="line">    <span class="comment">// 获得对应的本地文件路径，类似 '/srv/www/css/bootstrap.css':</span></span><br><span class="line">    <span class="keyword">var</span> filepath = path.join(root, pathname);</span><br><span class="line">    <span class="comment">// 获取文件状态:fs.stat() 来检查某个文件是否存在，stats 为 fs.Stats 对象，它提供了一个文件的信息</span></span><br><span class="line">    fs.stat(filepath, <span class="function"><span class="keyword">function</span> (<span class="params">err, stats</span>) </span>&#123;	</span><br><span class="line">        <span class="keyword">if</span> (!err &amp;&amp; stats.isFile()) &#123;<span class="comment">//如果 fs.Stats对象表示一个普通文件，stats.isFile()则返回 true</span></span><br><span class="line">            <span class="comment">// 没有出错并且文件存在:</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'200 '</span> + request.url);</span><br><span class="line">            <span class="comment">// 发送200响应:</span></span><br><span class="line">            response.writeHead(<span class="number">200</span>);</span><br><span class="line">            <span class="comment">// 将文件流导向response:</span></span><br><span class="line">            fs.createReadStream(filepath).pipe(response)；</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 出错了或者文件不存在:</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'404 '</span> + request.url);</span><br><span class="line">            <span class="comment">// 发送404响应:</span></span><br><span class="line">            response.writeHead(<span class="number">404</span>);</span><br><span class="line">            response.end(<span class="string">'404 Not Found'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Node</category>
+      </categories>
+      <tags>
+        <tag>NodeJs</tag>
+        <tag>流</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>exports与module.exports区别</title>
     <url>/2018/11/07/exports/</url>
     <content><![CDATA[<blockquote>
@@ -1009,43 +1046,6 @@
         <tag>exports</tag>
         <tag>module.exports</tag>
         <tag>模块化</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>node中请求静态文件（图片例子）</title>
-    <url>/2018/11/06/fs/</url>
-    <content><![CDATA[<blockquote>
-<p>读node的API过程中发现了response的中一句</p>
-<p>The response inherits from <a href="https://nodejs.org/api/http.html" target="_blank" rel="noopener">Stream</a>, and additionally implements the following:</p>
-<p>（这个类实现了（而不是继承自）<a href="http://nodejs.cn/s/9JUnJ8" target="_blank" rel="noopener">可写流</a> 接口。 它是一个有以下事件的 [<code>EventEmitter</code>]：）</p>
-</blockquote>
-<ol>
-<li><h3 id="来理解一下-fs-createReadStream-filePath-pipe-response"><a href="#来理解一下-fs-createReadStream-filePath-pipe-response" class="headerlink" title="来理解一下  fs.createReadStream( filePath).pipe(response);"></a>来理解一下  fs.createReadStream( filePath).pipe(response);</h3><ul>
-<li>createReadStrem 是返回 : &lt;fs.ReadStream&gt;  详见<a href="http://nodejs.cn/s/YuDKX1" target="_blank" rel="noopener">可读流</a>。</li>
-<li>response 当然就是响应</li>
-<li>pipe是将两个数据流连接起来。</li>
-</ul>
-</li>
-<li><p>这样就可以输出数据流了么？</p>
-<ul>
-<li>我们知道WriteStream （可写流是对数据要被写入的目的地的一种抽象。）</li>
-<li>所有可写流的例子（包括fs的写入流）都实现了 stream.Writable类定义的接口。</li>
-<li>也就是说可以输出数据流</li>
-<li>而前言提到response 也实现了可写流接口 </li>
-<li>那么fs.createReadStream 与response拼接响应，就可以输出了</li>
-</ul>
-</li>
-<li><p>来个小例子</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> url = <span class="built_in">require</span>(<span class="string">'url'</span>);</span><br><span class="line"><span class="keyword">const</span> path =<span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="comment">// 从命令行参数获取root目录，默认是当前目录:</span></span><br><span class="line"><span class="keyword">var</span> root = path.resolve(process.argv[<span class="number">2</span>] || <span class="string">'.'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Static root dir: '</span> + root);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建服务器:</span></span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">request, response</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 获得URL的path，类似 '/css/bootstrap.css':</span></span><br><span class="line">    <span class="keyword">var</span> pathname = url.parse(request.url).pathname;</span><br><span class="line">    <span class="comment">// 获得对应的本地文件路径，类似 '/srv/www/css/bootstrap.css':</span></span><br><span class="line">    <span class="keyword">var</span> filepath = path.join(root, pathname);</span><br><span class="line">    <span class="comment">// 获取文件状态:fs.stat() 来检查某个文件是否存在，stats 为 fs.Stats 对象，它提供了一个文件的信息</span></span><br><span class="line">    fs.stat(filepath, <span class="function"><span class="keyword">function</span> (<span class="params">err, stats</span>) </span>&#123;	</span><br><span class="line">        <span class="keyword">if</span> (!err &amp;&amp; stats.isFile()) &#123;<span class="comment">//如果 fs.Stats对象表示一个普通文件，stats.isFile()则返回 true</span></span><br><span class="line">            <span class="comment">// 没有出错并且文件存在:</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'200 '</span> + request.url);</span><br><span class="line">            <span class="comment">// 发送200响应:</span></span><br><span class="line">            response.writeHead(<span class="number">200</span>);</span><br><span class="line">            <span class="comment">// 将文件流导向response:</span></span><br><span class="line">            fs.createReadStream(filepath).pipe(response)；</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 出错了或者文件不存在:</span></span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'404 '</span> + request.url);</span><br><span class="line">            <span class="comment">// 发送404响应:</span></span><br><span class="line">            response.writeHead(<span class="number">404</span>);</span><br><span class="line">            response.end(<span class="string">'404 Not Found'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.listen(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Node</category>
-      </categories>
-      <tags>
-        <tag>NodeJs</tag>
-        <tag>流</tag>
       </tags>
   </entry>
   <entry>
@@ -1804,79 +1804,6 @@
       </tags>
   </entry>
   <entry>
-    <title>工厂模式、构造函数、原型的理解</title>
-    <url>/2018/08/17/object/</url>
-    <content><![CDATA[<blockquote>
-<p>越来越感觉到站在巨人的肩膀上学习是多么方便，并且越来越感觉到前端内容广阔，需要学习的东西还很多，努力吧！去争取自己想要的生活，做一个合格的码农。</p>
-</blockquote>
-<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><ul>
-<li>单例模式就是起到分组的作用，比如大型项目中，好多前端人员进行开发，这个时候可以把项目分成几个功能模块，不同的人编写不同的模块，最后合起来就是模块化开发.</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//单例模式</span></span><br><span class="line"><span class="keyword">var</span> person1 =&#123;</span><br><span class="line">  name:<span class="string">'张三'</span>,</span><br><span class="line">  age:<span class="number">54</span>,</span><br><span class="line">  showName:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;,</span><br><span class="line">  showAge:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年纪："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person2 =&#123;</span><br><span class="line">  name:<span class="string">'李四'</span>,</span><br><span class="line">  age:<span class="number">20</span>,</span><br><span class="line">  showName:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;,</span><br><span class="line">  showAge:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年纪："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">person1.showName();</span><br><span class="line">person2.showName();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>缺点也是显而易见的能解决分组作用，但是不能解决批量生成的问题，代码可重复性低，而且多个对象之后代码冗余程度高.</li>
-</ul>
-<h3 id="工厂模式-顾名思义就是批量生产东西嘛"><a href="#工厂模式-顾名思义就是批量生产东西嘛" class="headerlink" title="工厂模式 (顾名思义就是批量生产东西嘛)"></a>工厂模式 (顾名思义就是批量生产东西嘛)</h3><ul>
-<li>把实现同一件事情的相同代码放到同一个函数中，想实现这个功能只要执行这个函数即可，这就是工厂模式，也叫做“函数的封装”，这也是”低耦合，高内聚“，从而达到减少页面冗余码，提高代码重复利用率的作用.</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> person =<span class="keyword">new</span> <span class="built_in">Object</span>(); <span class="comment">//创建一个新对象</span></span><br><span class="line">   <span class="comment">//原料</span></span><br><span class="line">  person.name = name;</span><br><span class="line">  person.age = age;</span><br><span class="line">   <span class="comment">//加工</span></span><br><span class="line">  person.showName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;</span><br><span class="line">  person.showAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年龄："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//出厂</span></span><br><span class="line">  <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = createPerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = createPerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"><span class="built_in">console</span>.log(p1.showName==p2.showName); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>一般我们创建对象是通过new来创建，比如new Date()，这里使用的是方法创建。（var p1=createPerson(“张三”,45)）使用new来创建可以简化一些代码，也带来一些新的特性。</li>
-<li>每个对象都有一套自己的方法，浪费资源   console.log(p1.showName==p2.showName); false  说明两个方法不一样  ，因为创建function()的时候其本质是通过new Function()来创建的，会诞生一个新的函数对象，造成资源浪费。</li>
-</ol>
-<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul>
-<li>Array、Object、Function等这些都是内置类，所有的数组都是内置类Array的实例，所以的对象都是内置类Object的实例，所以函数都是Function的实例，而构造函数就是自定义一个类。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreatePerson</span> (<span class="params">name,age</span>)</span>&#123;  <span class="comment">//首先构造函数 开头首字母大写</span></span><br><span class="line">  <span class="keyword">this</span>.name =name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">  <span class="keyword">this</span>.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+ <span class="keyword">this</span>.name);</span><br><span class="line">  &#125; ;</span><br><span class="line">  <span class="keyword">this</span>.showAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//不用返回对象啦！！！</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> CreatePerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> CreatePerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"><span class="built_in">console</span>.log(p1.showName==p2.showName); <span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//1.我们看到这里使用了new方法来创建对象.</span></span><br><span class="line"><span class="comment">//2.但是console.log(p1.showName==p2.showName); //false 依旧是false  说明还是存在浪费资源的问题.</span></span><br></pre></td></tr></table></figure>
-<h3 id="构造函数之原型"><a href="#构造函数之原型" class="headerlink" title="构造函数之原型"></a>构造函数之原型</h3><ul>
-<li>JavaScript规定，每一个函数都有一个prototype属性，它指向另一个对象。这个对象的所有属性和方法，都会被函数的<label style="color:red">new出来的实例</label>继承。能够引用prototype的东西绝对是函数,prototype是函数的一个属性，是函数的原型对象</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreatePerson</span> (<span class="params">name,age</span>)</span>&#123;  <span class="comment">//首先构造函数 开头首字母大写</span></span><br><span class="line">  <span class="keyword">this</span>.name =name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line">CreatePerson.prototype.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name );</span><br><span class="line">&#125;</span><br><span class="line">CreatePerson.prototype.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"年龄："</span>+<span class="keyword">this</span>.age );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> CreatePerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> CreatePerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(p1.showName == p2.showName);  <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(p1.showName == Person.prototype.showName);  <span class="comment">//true</span></span><br><span class="line"><span class="comment">//这时console.log(p1.showName==p2.showName); 结果为 true</span></span><br><span class="line"><span class="comment">//这时所有实例的方法，其实都是同一个内存地址，指向prototype对象，因此就提高了运行效率。</span></span><br><span class="line"><span class="comment">//console.log(p1.showName == Person.prototype.showName); 为true 证明都指向prototype对象</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>面向对象编程基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>react-redux原理</title>
-    <url>/2019/03/19/react-redux/</url>
-    <content><![CDATA[<blockquote>
-<p>使用react-redux 怎们能不了解原理，彻底了解原理和单纯的使用，应该不是一个级别的选手吧</p>
-</blockquote>
-<h3 id="redux原理实现"><a href="#redux原理实现" class="headerlink" title="redux原理实现"></a>redux原理实现</h3><ul>
-<li><h5 id="简单的redux"><a href="#简单的redux" class="headerlink" title="简单的redux"></a>简单的redux</h5><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 根据我们使用redux的用法 ，开始是createStore然后createStore中有getState、dispatch、subscribe</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// createStore 有两个参数 第一个reducer 第二个参数中间件 (增强)</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">createStore</span>(<span class="params">reducer, enhancer</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> currentState ; <span class="comment">//初始状态 可以是对象或者什么都可以，因为使用时会给出初始值</span></span><br><span class="line">    <span class="keyword">let</span> currentListeners = []; <span class="comment">//每次函数的修改都要触发组件的变化 ，所以要有监听器</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getState</span>(<span class="params"></span>) </span>&#123;    <span class="comment">// 定义getState方法，getState()返回当前的state树，它与 store 的最后一个 reducer 返回值相同。</span></span><br><span class="line">        <span class="keyword">return</span> currentState;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">subscribe</span>(<span class="params">listener</span>) </span>&#123;  <span class="comment">//定义我们监听的时候使用的方法</span></span><br><span class="line">        currentListeners.push(listener)  <span class="comment">// 将我们需要监听的组件传递进来，push到currentListeners数组中</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">dispatch</span>(<span class="params">action</span>) </span>&#123;   <span class="comment">//定义我们的dispatch方法  使用dispatch会传递一个action参数</span></span><br><span class="line">        currentState = reducer(currentState,action);  </span><br><span class="line">        <span class="comment">// reducer 中有两个参数  像这样 counterReducer = (state=0,action)=&gt;&#123; &#125; reducer返回的新的state</span></span><br><span class="line">        currentListeners.forEach(<span class="function"><span class="params">value</span> =&gt;</span> value()); </span><br><span class="line">        <span class="comment">// 每次dispatch都执行一下 所有 subscribe里的内容 ，比如index.js中 每一次dispatch都执行render= ()=&gt;&#123;&#125;这个方法</span></span><br><span class="line">        <span class="comment">// const render =()=&gt;&#123;</span></span><br><span class="line">        <span class="comment">//     ReactDOM.render(</span></span><br><span class="line">        <span class="comment">//         &lt;App /&gt;,</span></span><br><span class="line">        <span class="comment">//         document.getElementById('root')</span></span><br><span class="line">        <span class="comment">//     );</span></span><br><span class="line">        <span class="comment">// &#125;;</span></span><br><span class="line">        <span class="comment">// render();</span></span><br><span class="line">        <span class="comment">// store.subscribe(render);</span></span><br><span class="line">        <span class="keyword">return</span> action</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch(&#123;<span class="attr">type</span>:<span class="string">'@IMOOC/WONIU-REDUX'</span>&#125;);  <span class="comment">//手动先dispatch ,让它第一次dispatch命中默认初始值dispatch，不然不会有初始值</span></span><br><span class="line">    <span class="keyword">return</span> &#123;getState,subscribe,dispatch&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><h5 id="react-redux"><a href="#react-redux" class="headerlink" title="react-redux"></a>react-redux</h5><ul>
-<li><p>Provider</p>
-<blockquote>
-<p>Provider 模块功能并不复杂 ，需要实现一下两点</p>
-</blockquote>
-<ul>
-<li>在原应用组件上包裹一层，使原来整个应用成为Provider的子组件</li>
-<li>接收Redux的store作为props，通过context对象传递给子孙组件上的connect</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React,&#123;Component&#125; from &apos;react&apos;</span><br><span class="line">import PropTypes from &apos;prop-types&apos;  </span><br><span class="line">//  prop-types就是对react组件中props对象中的变量进行类型检测的，因为props是react数据流的管道，我们通过prop-types就可以轻松监控react里大多数据的变量类型</span><br><span class="line">export class Provider extends Component&#123;</span><br><span class="line">    static childContextTypes = &#123;  // 设置childContext 状态值类型</span><br><span class="line">        store: PropTypes.object</span><br><span class="line">    &#125;;</span><br><span class="line">    getChildContext()&#123;   // 设置childContext,设置完了这样所有的子元素都能取到</span><br><span class="line">        return &#123;store:this.store&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    constructor(props, context)&#123;</span><br><span class="line">        super(props, context);</span><br><span class="line">        this.store = props.store  </span><br><span class="line">    &#125;</span><br><span class="line">    render()&#123;</span><br><span class="line">        return this.props.children  // this.props.children是react内置在this.props上的对象，用于获取当前组件的所有子组件</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// Provider初始化时，获取到props中的store对象；</span><br><span class="line">// 将外部的store对象放入context对象中，使子孙组件上的connect可以直接访问到context对象中的store。</span><br><span class="line">// context可以使子孙组件直接获取父级组件中的数据或方法，而无需一层一层通过props向下传递。</span><br><span class="line">// context对象相当于一个独立的空间，父组件通过getChildContext()向该空间内写值；定义了contextTypes验证的子孙组件可以通过this.context.xxx，从context对象中读取xxx字段的值。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>connect</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//添加监听对象，并尝试通过 props 将状态传递给子组件</span><br><span class="line">const connect = (mapStateToProps,mapDispatchToProps)=&gt;&#123; //返回一个函数</span><br><span class="line">    return WrappedComponent=&gt;&#123;</span><br><span class="line">        return class ConnectComp extends Component&#123;</span><br><span class="line">            static contextTypes = &#123;</span><br><span class="line">                store:PropTypes.object</span><br><span class="line">            &#125;;</span><br><span class="line">            //获取context</span><br><span class="line">            constructor(props,context)&#123;</span><br><span class="line">                super(props, context)</span><br><span class="line">                this.state = &#123;</span><br><span class="line">                    props:&#123;&#125;  // 手动定义一个state</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            componentDidMount()&#123;</span><br><span class="line">                const &#123;store&#125; = this.context</span><br><span class="line">                store.subscribe(()=&gt;this.update())  // 每次dispatch(更新)都会执行一下subscribe 里边的</span><br><span class="line">                this.update()  //</span><br><span class="line">            &#125;</span><br><span class="line">            update()&#123;</span><br><span class="line">                const &#123;store&#125; = this.context;</span><br><span class="line">                const stateProps =mapStateToProps(store.getState())</span><br><span class="line">                const dispatchProps = bindActionCreators(mapDispatchToProps,store.dispatch)</span><br><span class="line">                //作用是将单个或多个ActionCreator转化为dispatch(action)的函数集合形式。</span><br><span class="line">                //将一个或多个action和dispatch组合起来生成mapDispatchToProps需要生成的内容 ，其实就是把多个action还是用dispatch调用</span><br><span class="line">                this.setState(&#123;</span><br><span class="line">                    props:&#123;</span><br><span class="line">                        ...this.state.props,</span><br><span class="line">                        ...stateProps,</span><br><span class="line">                        ...dispatchProps</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            render() &#123;</span><br><span class="line">                return &lt;WrappedComponent &#123;...this.state.props&#125;&gt;&lt;/WrappedComponent&gt;</span><br><span class="line">                // 这个WrappedComponent也就是我们的使用的App，这样的connect(mapStateToProps,mapDispatchToProps)(App)</span><br><span class="line">                // 使用connect组件的时候 我们的state add方法等等都到了props之上，就是通过这实现的</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>React</category>
-      </categories>
-      <tags>
-        <tag>Redux理解</tag>
-        <tag>Redux单向数据流</tag>
-        <tag>react-redux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>vue + koa2 + mongodb 前后端分离登陆demo</title>
     <url>/2020/09/09/mongodb2/</url>
     <content><![CDATA[<blockquote>
@@ -1953,6 +1880,79 @@
         <tag>mongodb</tag>
         <tag>node</tag>
         <tag>vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react-redux原理</title>
+    <url>/2019/03/19/react-redux/</url>
+    <content><![CDATA[<blockquote>
+<p>使用react-redux 怎们能不了解原理，彻底了解原理和单纯的使用，应该不是一个级别的选手吧</p>
+</blockquote>
+<h3 id="redux原理实现"><a href="#redux原理实现" class="headerlink" title="redux原理实现"></a>redux原理实现</h3><ul>
+<li><h5 id="简单的redux"><a href="#简单的redux" class="headerlink" title="简单的redux"></a>简单的redux</h5><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 根据我们使用redux的用法 ，开始是createStore然后createStore中有getState、dispatch、subscribe</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// createStore 有两个参数 第一个reducer 第二个参数中间件 (增强)</span></span><br><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">createStore</span>(<span class="params">reducer, enhancer</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> currentState ; <span class="comment">//初始状态 可以是对象或者什么都可以，因为使用时会给出初始值</span></span><br><span class="line">    <span class="keyword">let</span> currentListeners = []; <span class="comment">//每次函数的修改都要触发组件的变化 ，所以要有监听器</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getState</span>(<span class="params"></span>) </span>&#123;    <span class="comment">// 定义getState方法，getState()返回当前的state树，它与 store 的最后一个 reducer 返回值相同。</span></span><br><span class="line">        <span class="keyword">return</span> currentState;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">subscribe</span>(<span class="params">listener</span>) </span>&#123;  <span class="comment">//定义我们监听的时候使用的方法</span></span><br><span class="line">        currentListeners.push(listener)  <span class="comment">// 将我们需要监听的组件传递进来，push到currentListeners数组中</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">dispatch</span>(<span class="params">action</span>) </span>&#123;   <span class="comment">//定义我们的dispatch方法  使用dispatch会传递一个action参数</span></span><br><span class="line">        currentState = reducer(currentState,action);  </span><br><span class="line">        <span class="comment">// reducer 中有两个参数  像这样 counterReducer = (state=0,action)=&gt;&#123; &#125; reducer返回的新的state</span></span><br><span class="line">        currentListeners.forEach(<span class="function"><span class="params">value</span> =&gt;</span> value()); </span><br><span class="line">        <span class="comment">// 每次dispatch都执行一下 所有 subscribe里的内容 ，比如index.js中 每一次dispatch都执行render= ()=&gt;&#123;&#125;这个方法</span></span><br><span class="line">        <span class="comment">// const render =()=&gt;&#123;</span></span><br><span class="line">        <span class="comment">//     ReactDOM.render(</span></span><br><span class="line">        <span class="comment">//         &lt;App /&gt;,</span></span><br><span class="line">        <span class="comment">//         document.getElementById('root')</span></span><br><span class="line">        <span class="comment">//     );</span></span><br><span class="line">        <span class="comment">// &#125;;</span></span><br><span class="line">        <span class="comment">// render();</span></span><br><span class="line">        <span class="comment">// store.subscribe(render);</span></span><br><span class="line">        <span class="keyword">return</span> action</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch(&#123;<span class="attr">type</span>:<span class="string">'@IMOOC/WONIU-REDUX'</span>&#125;);  <span class="comment">//手动先dispatch ,让它第一次dispatch命中默认初始值dispatch，不然不会有初始值</span></span><br><span class="line">    <span class="keyword">return</span> &#123;getState,subscribe,dispatch&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><h5 id="react-redux"><a href="#react-redux" class="headerlink" title="react-redux"></a>react-redux</h5><ul>
+<li><p>Provider</p>
+<blockquote>
+<p>Provider 模块功能并不复杂 ，需要实现一下两点</p>
+</blockquote>
+<ul>
+<li>在原应用组件上包裹一层，使原来整个应用成为Provider的子组件</li>
+<li>接收Redux的store作为props，通过context对象传递给子孙组件上的connect</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import React,&#123;Component&#125; from &apos;react&apos;</span><br><span class="line">import PropTypes from &apos;prop-types&apos;  </span><br><span class="line">//  prop-types就是对react组件中props对象中的变量进行类型检测的，因为props是react数据流的管道，我们通过prop-types就可以轻松监控react里大多数据的变量类型</span><br><span class="line">export class Provider extends Component&#123;</span><br><span class="line">    static childContextTypes = &#123;  // 设置childContext 状态值类型</span><br><span class="line">        store: PropTypes.object</span><br><span class="line">    &#125;;</span><br><span class="line">    getChildContext()&#123;   // 设置childContext,设置完了这样所有的子元素都能取到</span><br><span class="line">        return &#123;store:this.store&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    constructor(props, context)&#123;</span><br><span class="line">        super(props, context);</span><br><span class="line">        this.store = props.store  </span><br><span class="line">    &#125;</span><br><span class="line">    render()&#123;</span><br><span class="line">        return this.props.children  // this.props.children是react内置在this.props上的对象，用于获取当前组件的所有子组件</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// Provider初始化时，获取到props中的store对象；</span><br><span class="line">// 将外部的store对象放入context对象中，使子孙组件上的connect可以直接访问到context对象中的store。</span><br><span class="line">// context可以使子孙组件直接获取父级组件中的数据或方法，而无需一层一层通过props向下传递。</span><br><span class="line">// context对象相当于一个独立的空间，父组件通过getChildContext()向该空间内写值；定义了contextTypes验证的子孙组件可以通过this.context.xxx，从context对象中读取xxx字段的值。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>connect</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//添加监听对象，并尝试通过 props 将状态传递给子组件</span><br><span class="line">const connect = (mapStateToProps,mapDispatchToProps)=&gt;&#123; //返回一个函数</span><br><span class="line">    return WrappedComponent=&gt;&#123;</span><br><span class="line">        return class ConnectComp extends Component&#123;</span><br><span class="line">            static contextTypes = &#123;</span><br><span class="line">                store:PropTypes.object</span><br><span class="line">            &#125;;</span><br><span class="line">            //获取context</span><br><span class="line">            constructor(props,context)&#123;</span><br><span class="line">                super(props, context)</span><br><span class="line">                this.state = &#123;</span><br><span class="line">                    props:&#123;&#125;  // 手动定义一个state</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            componentDidMount()&#123;</span><br><span class="line">                const &#123;store&#125; = this.context</span><br><span class="line">                store.subscribe(()=&gt;this.update())  // 每次dispatch(更新)都会执行一下subscribe 里边的</span><br><span class="line">                this.update()  //</span><br><span class="line">            &#125;</span><br><span class="line">            update()&#123;</span><br><span class="line">                const &#123;store&#125; = this.context;</span><br><span class="line">                const stateProps =mapStateToProps(store.getState())</span><br><span class="line">                const dispatchProps = bindActionCreators(mapDispatchToProps,store.dispatch)</span><br><span class="line">                //作用是将单个或多个ActionCreator转化为dispatch(action)的函数集合形式。</span><br><span class="line">                //将一个或多个action和dispatch组合起来生成mapDispatchToProps需要生成的内容 ，其实就是把多个action还是用dispatch调用</span><br><span class="line">                this.setState(&#123;</span><br><span class="line">                    props:&#123;</span><br><span class="line">                        ...this.state.props,</span><br><span class="line">                        ...stateProps,</span><br><span class="line">                        ...dispatchProps</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            render() &#123;</span><br><span class="line">                return &lt;WrappedComponent &#123;...this.state.props&#125;&gt;&lt;/WrappedComponent&gt;</span><br><span class="line">                // 这个WrappedComponent也就是我们的使用的App，这样的connect(mapStateToProps,mapDispatchToProps)(App)</span><br><span class="line">                // 使用connect组件的时候 我们的state add方法等等都到了props之上，就是通过这实现的</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>React</category>
+      </categories>
+      <tags>
+        <tag>Redux理解</tag>
+        <tag>Redux单向数据流</tag>
+        <tag>react-redux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>工厂模式、构造函数、原型的理解</title>
+    <url>/2018/08/17/object/</url>
+    <content><![CDATA[<blockquote>
+<p>越来越感觉到站在巨人的肩膀上学习是多么方便，并且越来越感觉到前端内容广阔，需要学习的东西还很多，努力吧！去争取自己想要的生活，做一个合格的码农。</p>
+</blockquote>
+<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><ul>
+<li>单例模式就是起到分组的作用，比如大型项目中，好多前端人员进行开发，这个时候可以把项目分成几个功能模块，不同的人编写不同的模块，最后合起来就是模块化开发.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//单例模式</span></span><br><span class="line"><span class="keyword">var</span> person1 =&#123;</span><br><span class="line">  name:<span class="string">'张三'</span>,</span><br><span class="line">  age:<span class="number">54</span>,</span><br><span class="line">  showName:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;,</span><br><span class="line">  showAge:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年纪："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person2 =&#123;</span><br><span class="line">  name:<span class="string">'李四'</span>,</span><br><span class="line">  age:<span class="number">20</span>,</span><br><span class="line">  showName:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;,</span><br><span class="line">  showAge:<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年纪："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">person1.showName();</span><br><span class="line">person2.showName();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>缺点也是显而易见的能解决分组作用，但是不能解决批量生成的问题，代码可重复性低，而且多个对象之后代码冗余程度高.</li>
+</ul>
+<h3 id="工厂模式-顾名思义就是批量生产东西嘛"><a href="#工厂模式-顾名思义就是批量生产东西嘛" class="headerlink" title="工厂模式 (顾名思义就是批量生产东西嘛)"></a>工厂模式 (顾名思义就是批量生产东西嘛)</h3><ul>
+<li>把实现同一件事情的相同代码放到同一个函数中，想实现这个功能只要执行这个函数即可，这就是工厂模式，也叫做“函数的封装”，这也是”低耦合，高内聚“，从而达到减少页面冗余码，提高代码重复利用率的作用.</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> person =<span class="keyword">new</span> <span class="built_in">Object</span>(); <span class="comment">//创建一个新对象</span></span><br><span class="line">   <span class="comment">//原料</span></span><br><span class="line">  person.name = name;</span><br><span class="line">  person.age = age;</span><br><span class="line">   <span class="comment">//加工</span></span><br><span class="line">  person.showName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name);</span><br><span class="line">  &#125;</span><br><span class="line">  person.showAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"年龄："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//出厂</span></span><br><span class="line">  <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = createPerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = createPerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"><span class="built_in">console</span>.log(p1.showName==p2.showName); <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>一般我们创建对象是通过new来创建，比如new Date()，这里使用的是方法创建。（var p1=createPerson(“张三”,45)）使用new来创建可以简化一些代码，也带来一些新的特性。</li>
+<li>每个对象都有一套自己的方法，浪费资源   console.log(p1.showName==p2.showName); false  说明两个方法不一样  ，因为创建function()的时候其本质是通过new Function()来创建的，会诞生一个新的函数对象，造成资源浪费。</li>
+</ol>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ul>
+<li>Array、Object、Function等这些都是内置类，所有的数组都是内置类Array的实例，所以的对象都是内置类Object的实例，所以函数都是Function的实例，而构造函数就是自定义一个类。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreatePerson</span> (<span class="params">name,age</span>)</span>&#123;  <span class="comment">//首先构造函数 开头首字母大写</span></span><br><span class="line">  <span class="keyword">this</span>.name =name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">  <span class="keyword">this</span>.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+ <span class="keyword">this</span>.name);</span><br><span class="line">  &#125; ;</span><br><span class="line">  <span class="keyword">this</span>.showAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//不用返回对象啦！！！</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> CreatePerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> CreatePerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"><span class="built_in">console</span>.log(p1.showName==p2.showName); <span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//1.我们看到这里使用了new方法来创建对象.</span></span><br><span class="line"><span class="comment">//2.但是console.log(p1.showName==p2.showName); //false 依旧是false  说明还是存在浪费资源的问题.</span></span><br></pre></td></tr></table></figure>
+<h3 id="构造函数之原型"><a href="#构造函数之原型" class="headerlink" title="构造函数之原型"></a>构造函数之原型</h3><ul>
+<li>JavaScript规定，每一个函数都有一个prototype属性，它指向另一个对象。这个对象的所有属性和方法，都会被函数的<label style="color:red">new出来的实例</label>继承。能够引用prototype的东西绝对是函数,prototype是函数的一个属性，是函数的原型对象</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreatePerson</span> (<span class="params">name,age</span>)</span>&#123;  <span class="comment">//首先构造函数 开头首字母大写</span></span><br><span class="line">  <span class="keyword">this</span>.name =name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line">CreatePerson.prototype.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"姓名："</span>+<span class="keyword">this</span>.name );</span><br><span class="line">&#125;</span><br><span class="line">CreatePerson.prototype.showName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"年龄："</span>+<span class="keyword">this</span>.age );</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> CreatePerson(<span class="string">"张三"</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> CreatePerson(<span class="string">"李四"</span>,<span class="number">20</span>);</span><br><span class="line">p1.showName();</span><br><span class="line">p2.showName();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(p1.showName == p2.showName);  <span class="comment">//true</span></span><br><span class="line"><span class="built_in">console</span>.log(p1.showName == Person.prototype.showName);  <span class="comment">//true</span></span><br><span class="line"><span class="comment">//这时console.log(p1.showName==p2.showName); 结果为 true</span></span><br><span class="line"><span class="comment">//这时所有实例的方法，其实都是同一个内存地址，指向prototype对象，因此就提高了运行效率。</span></span><br><span class="line"><span class="comment">//console.log(p1.showName == Person.prototype.showName); 为true 证明都指向prototype对象</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>面向对象编程基础</tag>
       </tags>
   </entry>
   <entry>
@@ -2911,6 +2911,32 @@
         <tag>父子组件数据传递</tag>
         <tag>Vue模拟数据</tag>
         <tag>简单数据的持久化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你的调试工具vue-devtools还好么？</title>
+    <url>/2021/05/07/vue-devtools/</url>
+    <content><![CDATA[<blockquote>
+<p>讲讲最近的事吧！最近去了杭州，体验了什么叫人家尽枕河的生活，最近心情也不太好，比较消极，我自己能想到的排解方式可能就是更加努力的工作和学习吧，古人云：世上本无事，庸人自扰之，做好自己吧！努力生活，去追逐诗和远方。</p>
+</blockquote>
+<p>上回书说到体验vue3.0，但是在学习vue3的时候，进行敲代码你怎么能不使用我们的调试工具vue-devtools？都说磨刀不误砍柴工，那我今天也想砍柴之前磨磨刀。但是突然发现我的刀呢？我的刀… 哇哇哇。我的刀断了啊。我能这么办？</p>
+<p><a href="https://imgtu.com/i/g3Ks0I" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/05/07/g3Ks0I.jpg" alt="g3Ks0I.jpg"></a><br><br><br>找了网上各大元老们兢兢业业整理的答案，然而并没有什么卵用….</p>
+<ol>
+<li>修改Vue.config.devtools = true;</li>
+<li>导入Vue插件是我们选择开发版本的插件（vue.js） ，不倡导引入vue.min.js啊 </li>
+<li>开启允许访问文件网址和在无痕模式下启用两项 </li>
+</ol>
+<p>在我满心等待欢喜的时候，欢喜却错过了你。唉无奈啊</p>
+<p>开启自我寻找，我想着可能是我的工具不能用了 ，卸载了重新装吧。然后在谷歌商店进行重装的时候我发现了beta 版，这是什么鬼，然后我就搜了一下，看见了么？针对vue3.0 ，我赶紧跑了一下原来的项目，发现的原来2.5的项目的刀是可以用的哈哈哈哈，原来用错刀了啊。<br><a href="https://imgtu.com/i/g3QBdI" target="_blank" rel="noopener"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/73c49ccf21e844218fe6933f7f837511~tplv-k3u1fbpfcp-zoom-1.image" alt="g3QBdI.png"></a></p>
+<p>于是进行下载beta版的vue-devtools-beta工具，启用然后重启浏览器。我的vue-devtools 用起来了。不须要其余配置，重启浏览器，直接F12能够看到新版的vue-devtool<br>若是不行，说明你安装的不对，不是配置问题！记住不是配置问题，看到网上不少人在说什么配置，那个是2.0强制开启的配置。<br><a href="https://imgtu.com/i/g3QLy4" target="_blank" rel="noopener"><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/199581b310104f5293e2af14227a6486~tplv-k3u1fbpfcp-zoom-1.image" alt="g3QLy4.png"></a></p>
+<p>ps: 直接在谷歌商店需要梯子，没有梯子就去github上下载一波，解压之后需要再添加进去</p>
+]]></content>
+      <categories>
+        <category>Vue</category>
+      </categories>
+      <tags>
+        <tag>调试工具</tag>
+        <tag>vue-devtools</tag>
       </tags>
   </entry>
   <entry>
