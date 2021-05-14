@@ -121,7 +121,7 @@
   <meta name="description" content="爱学习，爱生活">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Yuhior&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/vue/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/Vue/index.html">
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="爱学习，爱生活">
 <meta property="og:locale" content="zh-CN">
@@ -134,7 +134,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/vue/">
+  <link rel="canonical" href="http://yoursite.com/tags/Vue/">
 
 
 
@@ -144,7 +144,7 @@
   };
 </script>
 
-  <title>标签: vue | Yuhior's Blog</title>
+  <title>标签: Vue | Yuhior's Blog</title>
   
 
 
@@ -360,7 +360,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>vue<small>标签</small>
+        <h1>Vue<small>标签</small>
         </h1>
       </div>
 
@@ -372,17 +372,95 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2020/09/09/mongodb2/" itemprop="url">
+            <a class="post-title-link" href="/2021/01/06/ssr2/" itemprop="url">
               
-                <span itemprop="name">vue + koa2 + mongodb 前后端分离登陆demo</span>
+                <span itemprop="name">ssr2改造开始</span>
               
             </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-09-09T11:25:17+08:00" content="2020-09-09">
-          09-09
+        <time class="post-time" itemprop="dateCreated" datetime="2021-01-06T16:23:15+08:00" content="2021-01-06">
+          01-06
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2020/12/30/ssr/" itemprop="url">
+              
+                <span itemprop="name">ssr首屏渲染你懂了么？</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2020-12-30T10:55:42+08:00" content="2020-12-30">
+          12-30
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2020/11/09/authority/" itemprop="url">
+              
+                <span itemprop="name">Vue + mongodb 的后台权限分配</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2020-11-09T11:09:15+08:00" content="2020-11-09">
+          11-09
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2018/10/24/different/" itemprop="url">
+              
+                <span itemprop="name">Vue和小程序的区别</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2018-10-24T10:07:55+08:00" content="2018-10-24">
+          10-24
         </time>
       </div>
 
@@ -1142,102 +1220,6 @@
               })
               searchResultList += "</ul>";
               resultContent.innerHTML = searchResultList;
-            }
-          }
-
-          if ('auto' === 'auto') {
-            input.addEventListener('input', inputEventFunction);
-          } else {
-            $('.search-icon').click(inputEventFunction);
-            input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-
-
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  <script>
-     var link = "" ;
-    var oImg = document.querySelectorAll("img");
-    oImg.forEach(function(item,index){
-
-      if( item.getAttribute("src").indexOf("sinaimg") > 0 ){
-            // 给这个标签加上referrerPlicy属性
-        item.setAttribute("referrerpolicy","no-referrer");
-            // 备份图片的src
-        link = item.getAttribute("src");
-            // 重新设置src，让页面重新加载一次图片
-        item.setAttribute("src",link);
-      }
-    })
-  </script>
-</body>
-</html>
-       resultContent.innerHTML = searchResultList;
             }
           }
 

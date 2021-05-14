@@ -126,7 +126,7 @@
 <meta property="og:site_name" content="Yuhior&#39;s Blog">
 <meta property="og:description" content="生活总是要充满期待啊，为什么上来就说这句呢？因为真的是见了身边人对生活失去的兴趣，没有了感兴趣的点可能就对什么都毫无兴趣了吧。生活还是值得期待的，毕竟自己的能力水平提高了优秀了、或者生活有规划了其实这都是一个目标，再或者找不到那就去减肥啊，给自己一个目标，再再或者去追星啊 、疯狂的追星。人嘛总要经历才会成长、人嘛开心最重要了，一切的一切都以人为本。说说今天要讲的吧，有人总觉得不清晰，所以拿出来单">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-05-14T02:09:23.340Z">
+<meta property="og:updated_time" content="2021-05-14T08:44:45.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="细说一下Vue3的v-model，你get了么？">
 <meta name="twitter:description" content="生活总是要充满期待啊，为什么上来就说这句呢？因为真的是见了身边人对生活失去的兴趣，没有了感兴趣的点可能就对什么都毫无兴趣了吧。生活还是值得期待的，毕竟自己的能力水平提高了优秀了、或者生活有规划了其实这都是一个目标，再或者找不到那就去减肥啊，给自己一个目标，再再或者去追星啊 、疯狂的追星。人嘛总要经历才会成长、人嘛开心最重要了，一切的一切都以人为本。说说今天要讲的吧，有人总觉得不清晰，所以拿出来单">
@@ -391,7 +391,7 @@
                 
               
 
-              <time title="创建时间：2021-05-14 10:04:09 / 修改时间：10:09:23" itemprop="dateCreated datePublished" datetime="2021-05-14T10:04:09+08:00">2021-05-14</time>
+              <time title="创建时间：2021-05-14 10:04:09 / 修改时间：16:44:45" itemprop="dateCreated datePublished" datetime="2021-05-14T10:04:09+08:00">2021-05-14</time>
             
 
             
@@ -496,6 +496,41 @@
 </ul>
 </li>
 </ol>
+<ol start="4">
+<li><p>vue3 的v-model的修饰符</p>
+<p>我们知道v-model有.trim .lazy .number 等修饰符，这些都是默认也就是内置好的修饰符，那我们肯定需要自定义啊，不可能三个修饰符能满足我们所有吧</p>
+<ul>
+<li><p>那我们就来试试自己创建吧，自定义修饰符capitalize ,它的功能就是将v-model绑定提供的字符串的第一个字母大写<u>添加到组件v-model的修饰符将通过modelModifiers prop 提供给组件</u>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;my-component v-model.capitalize =&quot;bar&quot;&gt;&lt;/my-component&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">app.component(&apos;my-component&apos;,&#123;</span><br><span class="line">  props:&#123;</span><br><span class="line">    modelValue:String,</span><br><span class="line">    modelModifiers:&#123;</span><br><span class="line">      default:()=&gt;(&#123;&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  template:`</span><br><span class="line">	&lt;input type=&quot;text&quot; :value=&quot;modelValue&quot; @input=&quot;$emit(&apos;update:modelValue&apos;,$event.target.value)&quot;&gt;</span><br><span class="line">`,</span><br><span class="line">  created()&#123;</span><br><span class="line">    console.log(this.modelModifiers) // &#123;capitalize&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>现在我们已经设置了prop的值的，我们可以检查modelModifiers对象键并编写一个处理器来更改发出的值。之后每当input 元素触发input事件时，我们都将字符串开头大写</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 父组件</span><br><span class="line">&lt;div id=&quot;app&quot;&gt;</span><br><span class="line">  &lt;my-component v-model.capitalize=&quot;myText&quot;&gt;&lt;/my-component&gt;</span><br><span class="line">  &#123;&#123; myText &#125;&#125;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">const app = Vue.createApp(&#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      myText: &apos;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 子组件</span><br><span class="line">&lt;div&gt;</span><br><span class="line">	&lt;input type=&quot;text&quot; :value=&quot;modelValue&quot;  @input=&quot;emitValue&quot;&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">  	 props: &#123;</span><br><span class="line">        modelValue: String,</span><br><span class="line">        modelModifiers: &#123;</span><br><span class="line">          default: () =&gt; (&#123;&#125;)</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;,</span><br><span class="line">     methods: &#123;</span><br><span class="line">        emitValue(e) &#123;</span><br><span class="line">          let value = e.target.value</span><br><span class="line">          if (this.modelModifiers.capitalize) &#123;</span><br><span class="line">            value = value.charAt(0).toUpperCase() + value.slice(1)</span><br><span class="line">          &#125;</span><br><span class="line">          this.$emit(&apos;update:modelValue&apos;, value)</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>那我们带参数的怎么办呢 ？不能都用modelModifiers 吧？那咱们得多个v-model 岂不是受限制了，人家早想到了</p>
+<p>对于带参数的 <code>v-model</code> 绑定，生成的 prop 名称将为 <code>arg + &quot;Modifiers&quot;</code>： 比如下边</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;my-component v-model:foo.capitalize=&quot;bar&quot;&gt;&lt;/my-component&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">app.component(&apos;my-component&apos;, &#123;</span><br><span class="line">  props: [&apos;foo&apos;, &apos;fooModifiers&apos;],</span><br><span class="line">  template: `</span><br><span class="line">    &lt;input type=&quot;text&quot; </span><br><span class="line">      :value=&quot;foo&quot;</span><br><span class="line">      @input=&quot;$emit(&apos;update:foo&apos;, $event.target.value)&quot;&gt;</span><br><span class="line">  `,</span><br><span class="line">  created() &#123;</span><br><span class="line">    console.log(this.fooModifiers) // &#123; capitalize: true &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="5">
+<li></li>
+</ol>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;my-component v-model:foo.capitalize=&quot;bar&quot;&gt;&lt;/my-component&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 
       
     </div>
